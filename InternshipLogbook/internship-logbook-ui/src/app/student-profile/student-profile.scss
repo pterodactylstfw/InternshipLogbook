@@ -1,0 +1,185 @@
+$unitbv-blue: #1a3a5c;
+$unitbv-blue-light: #2c5f8a;
+$unitbv-orange: #e8731a;
+$unitbv-bg: #f0f4f8;
+
+:host ::ng-deep .profile-card {
+  margin-bottom: 20px;
+
+  .p-card-body { padding: 0; }
+  .p-card-content { padding: 20px 24px; }
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: linear-gradient(135deg, $unitbv-blue 0%, $unitbv-blue-light 100%);
+  border-radius: 12px 12px 0 0;
+  color: white;
+
+  .profile-avatar {
+    width: 56px;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i { font-size: 24px; }
+  }
+
+  .profile-info {
+    h2 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .subtitle {
+      margin: 4px 0 0;
+      font-size: 14px;
+      opacity: 0.85;
+    }
+  }
+}
+
+.profile-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+
+  .detail-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    background: $unitbv-bg;
+    border-radius: 8px;
+
+    > i {
+      color: $unitbv-orange;
+      font-size: 18px;
+      margin-top: 2px;
+    }
+
+    .detail-label {
+      display: block;
+      font-size: 12px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .detail-value {
+      display: block;
+      font-size: 14px;
+      color: $unitbv-blue;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+  }
+}
+
+.actions-bar {
+  margin: 20px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+// ═══ FORMULAR ═══
+:host ::ng-deep .form-card {
+  margin-bottom: 20px;
+  border-left: 4px solid $unitbv-orange;
+
+  .p-card-title {
+    color: $unitbv-blue;
+    font-size: 18px;
+  }
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+
+  label {
+    font-weight: 600;
+    font-size: 13px;
+    color: $unitbv-blue;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  input, textarea {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+// ═══ TABEL ═══
+:host ::ng-deep .table-card {
+  .p-card-title {
+    color: $unitbv-blue;
+    font-size: 18px;
+  }
+}
+
+:host ::ng-deep .p-datatable {
+  .p-datatable-thead > tr > th {
+    background: $unitbv-blue !important;
+    color: white !important;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .p-datatable-tbody > tr:hover {
+    background: lighten($unitbv-bg, 2%) !important;
+  }
+}
+
+.mr-2 {
+  margin-right: 8px;
+}
+
+@media (max-width: 768px) {
+  .profile-details {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row-3, .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+}
