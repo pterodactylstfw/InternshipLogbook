@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace InternshipLogbook.API.Models;
 
@@ -25,5 +26,6 @@ public partial class DailyActivity
 
     public string? Observations { get; set; }
 
-    public virtual Student Student { get; set; } = null!;
+    [JsonIgnore]
+    public virtual Student? Student { get; set; }
 }

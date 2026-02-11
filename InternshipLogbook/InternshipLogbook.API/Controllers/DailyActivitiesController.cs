@@ -23,28 +23,59 @@ namespace InternshipLogbook.API.Controllers
                 .OrderBy(activity => activity.DateOfActivity) // ord dupa data
                 .ToListAsync();
         }
-
+        
         [HttpPost("student/{studentId}")]
-        public async Task<ActionResult<DailyActivity>> PostDailyActivitiesByStudent(int studentId,
-            DailyActivity dailyActivity)
+        public async Task<IActionResult> PostDailyActivity(int studentId, DailyActivity dailyActivity)
         {
-            dailyActivity.StudentId = studentId;
-            
             var student = await _context.Students.FindAsync(studentId);
             if (student == null)
-            {
-                return BadRequest("Student not found");
-            }
+                return NotFound($"Student with ID {studentId} not found.");
             
+            dailyActivity.Id = 0;
+            dailyActivity.StudentId = studentId;
+
             _context.DailyActivities.Add(dailyActivity);
             await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(PostDailyActivity),
+                new { id = dailyActivity.Id }, dailyActivity);
+        }
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDailyActivity(int id)
+        {
+            var dailyActivity = await _context.DailyActivities.FindAsync(id);
+    
+            if (dailyActivity == null)
+            {
+                return NotFound();
+            }
             
-            
-            return CreatedAtAction(
-                nameof(GetDailyActivitiesByStudent), 
-                new { studentId = dailyActivity.StudentId }, 
-                dailyActivity
-            );
+            _context.DailyActivities.Remove(dailyActivity);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutDailyActivity(int id, DailyActivity dailyActivity)
+        {
+            var existingActivity = await _context.DailyActivities.FindAsync(id);
+            if(existingActivity ==  null)
+                return NotFound();
+            existingActivity.DayNumber = dailyActivity.DayNumber;
+            existingActivity.DateOfActivity = dailyActivity.DateOfActivity;
+            existingActivity.TimeFrame = dailyActivity.TimeFrame;
+            existingActivity.Venue = dailyActivity.Venue;
+            existingActivity.Activities = dailyActivity.Activities;
+            existingActivity.EquipmentUsed = dailyActivity.EquipmentUsed;
+            existingActivity.SkillsPracticed = dailyActivity.SkillsPracticed;
+            existingActivity.Observations = dailyActivity.Observations;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(existingActivity);
+
         }
     }
 }
