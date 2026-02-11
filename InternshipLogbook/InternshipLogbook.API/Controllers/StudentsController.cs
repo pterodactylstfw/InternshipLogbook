@@ -21,6 +21,16 @@ namespace InternshipLogbook.API.Controllers
                         return await _context.Students.ToListAsync();
                 }
 
+                [HttpGet("{id}")]
+                public async Task<ActionResult<Student>> GetStudentById(int id)
+                {
+                        var student = await _context.Students.FindAsync(id);
+                        if (student == null)
+                                return NotFound();
+                        
+                        return student;
+                }
+
                 [HttpPost]
                 public async Task<ActionResult<Student>> PostStudent(Student student)
                 {

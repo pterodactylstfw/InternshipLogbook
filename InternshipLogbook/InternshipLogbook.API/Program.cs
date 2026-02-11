@@ -3,30 +3,35 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Conexiunea la Baza de Date
 builder.Services.AddDbContext<InternshipLogbookDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 2. Serviciile API
 builder.Services.AddControllers();
 
-// --- SCHIMBAREA ESTE AICI ---
-// În loc de AddOpenApi(), folosim sistemul clasic Swashbuckle care are interfață grafică
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-// ----------------------------
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    // --- SCHIMBAREA ESTE AICI ---
-    // Activăm Swagger (JSON-ul) și SwaggerUI (Pagina Web)
+    
     app.UseSwagger();
     app.UseSwaggerUI(); 
-    // ----------------------------
 }
+
+app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 

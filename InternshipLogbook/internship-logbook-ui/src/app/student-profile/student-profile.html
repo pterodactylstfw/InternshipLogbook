@@ -1,0 +1,44 @@
+<div class="profile-container">
+  @if (student$ | async; as student) {
+    <h2>Profil Student</h2>
+    <p><strong>Nume:</strong> {{ student.fullName }}</p>
+    <p><strong>Facultate:</strong> {{ student.faculty }}</p>
+    <p><strong>Program Studiu:</strong> {{ student.studyProgramme }}</p>
+  } @else {
+    <p>Se încarcă datele...</p>
+  }
+</div>
+<hr> <h3>Activități Zilnice</h3>
+
+@if (activities$ | async; as activities) {
+
+  <table border="1" style="border-collapse: collapse; width: 100%;">
+    <thead>
+    <tr>
+      <th>Ziua</th>
+      <th>Data</th>
+      <th>Locație</th>
+      <th>Activități</th>
+      <th>Echipament</th>
+    </tr>
+    </thead>
+    <tbody>
+      @for (activity of activities; track activity.id) {
+        <tr>
+          <td>{{ activity.dayNumber }}</td>
+          <td>{{ activity.dateOfActivity }}</td>
+          <td>{{ activity.venue }}</td>
+          <td>{{ activity.activities }}</td>
+          <td>{{ activity.equipmentUsed }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (activities.length === 0) {
+    <p>Nu există activități înregistrate.</p>
+  }
+
+} @else {
+  <p>Se încarcă activitățile...</p>
+}
