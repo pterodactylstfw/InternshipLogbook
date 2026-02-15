@@ -27,7 +27,7 @@
 
     <ItemGroup>
       <None Update="Templates\Template.docx">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 
