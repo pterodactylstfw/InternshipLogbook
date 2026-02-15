@@ -1,10 +1,9 @@
-import { Component, inject } from '@angular/core';
-import { AsyncPipe, DatePipe, NgIf, NgFor } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, switchMap } from 'rxjs';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { CardModule } from 'primeng/card';
-import { TableModule } from 'primeng/table';
+import { TableModule, Table } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TextareaModule } from 'primeng/textarea';
@@ -12,17 +11,21 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { SkeletonModule } from 'primeng/skeleton';
+import { TooltipModule } from 'primeng/tooltip';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { StudentService } from '../services/student';
 import { DailyActivity } from '../models/daily-activity';
+import { Student } from '../models/student';
 
 @Component({
   selector: 'app-student-profile',
   imports: [
-    AsyncPipe,
-    DatePipe,
-    NgIf,
+    CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     CardModule,
     TableModule,
@@ -33,31 +36,43 @@ import { DailyActivity } from '../models/daily-activity';
     InputNumberModule,
     ToastModule,
     ConfirmDialogModule,
+    SkeletonModule,
+    TooltipModule,
+    IconFieldModule,
+    InputIconModule,
   ],
   templateUrl: './student-profile.html',
   styleUrl: './student-profile.scss',
 })
-export class StudentProfile {
+export class StudentProfile implements OnInit {
+  @ViewChild('dt') dt!: Table;
+
   private studentService = inject(StudentService);
   private fb = inject(FormBuilder);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private studentId = 1;
 
-  student$ = this.studentService.getStudent(this.studentId);
 
-  private refresh$ = new BehaviorSubject<void>(undefined);
-  activities$ = this.refresh$.pipe(
-    switchMap(() => this.studentService.getDailyActivities(this.studentId))
-  );
+  student: Student | null = null;
+  studentLoading = true;
+  studentError = false;
+
+
+  activities: DailyActivity[] = [];
+  activitiesLoading = true;
+  activitiesError = false;
+
 
   showForm = false;
   editingActivityId: number | null = null;
+  saving = false;
 
   activityForm: FormGroup = this.fb.group({
     dayNumber:            [null, [Validators.required, Validators.min(1)]],
     dateOfActivity:       [null, Validators.required],
-    timeFrame:            ['',  Validators.required],
+    startTime:            [null, Validators.required],
+    endTime:              [null, Validators.required],
     venue:                ['',  Validators.required],
     activities:           ['',  Validators.required],
     equipmentUsed:        [''],
@@ -67,6 +82,41 @@ export class StudentProfile {
 
   get isEditing(): boolean {
     return this.editingActivityId !== null;
+  }
+
+  ngOnInit(): void {
+    this.loadStudent();
+    this.loadActivities();
+  }
+
+  loadStudent(): void {
+    this.studentLoading = true;
+    this.studentError = false;
+    this.studentService.getStudent(this.studentId).subscribe({
+      next: (data) => {
+        this.student = data;
+        this.studentLoading = false;
+      },
+      error: () => {
+        this.studentError = true;
+        this.studentLoading = false;
+      },
+    });
+  }
+
+  loadActivities(): void {
+    this.activitiesLoading = true;
+    this.activitiesError = false;
+    this.studentService.getDailyActivities(this.studentId).subscribe({
+      next: (data) => {
+        this.activities = data;
+        this.activitiesLoading = false;
+      },
+      error: () => {
+        this.activitiesError = true;
+        this.activitiesLoading = false;
+      },
+    });
   }
 
   toggleForm(): void {
@@ -81,10 +131,21 @@ export class StudentProfile {
     this.editingActivityId = activity.id!;
     this.showForm = true;
 
+    let startTime: Date | null = null;
+    let endTime: Date | null = null;
+    if (activity.timeFrame) {
+      const parts = activity.timeFrame.split(' - ');
+      if (parts.length === 2) {
+        startTime = this.parseTime(parts[0].trim());
+        endTime = this.parseTime(parts[1].trim());
+      }
+    }
+
     this.activityForm.patchValue({
       dayNumber: activity.dayNumber,
       dateOfActivity: new Date(activity.dateOfActivity),
-      timeFrame: activity.timeFrame,
+      startTime: startTime,
+      endTime: endTime,
       venue: activity.venue,
       activities: activity.activities,
       equipmentUsed: activity.equipmentUsed,
@@ -93,6 +154,37 @@ export class StudentProfile {
     });
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  isFieldInvalid(fieldName: string): boolean {
+    const field = this.activityForm.get(fieldName);
+    return !!(field && field.invalid && field.touched);
+  }
+
+  private formatTime(date: Date): string {
+    const h = date.getHours().toString().padStart(2, '0');
+    const m = date.getMinutes().toString().padStart(2, '0');
+    return `${h}:${m}`;
+  }
+
+  private parseTime(timeStr: string): Date {
+    const [h, m] = timeStr.split(':').map(Number);
+    const d = new Date();
+    d.setHours(h, m, 0, 0);
+    return d;
+  }
+
+  getFieldError(fieldName: string): string {
+    const field = this.activityForm.get(fieldName);
+    if (!field || !field.errors || !field.touched) return '';
+    if (field.errors['required']) return 'Câmpul este obligatoriu';
+    if (field.errors['min']) return 'Valoarea minimă este 1';
+    return '';
+  }
+
+  onFilter(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.dt.filterGlobal(value, 'contains');
   }
 
   onSave(): void {
@@ -106,6 +198,7 @@ export class StudentProfile {
       return;
     }
 
+    this.saving = true;
     const raw = this.activityForm.value;
     let dateStr = raw.dateOfActivity;
     if (dateStr instanceof Date) {
@@ -116,7 +209,7 @@ export class StudentProfile {
       studentId: this.studentId,
       dayNumber: raw.dayNumber,
       dateOfActivity: dateStr,
-      timeFrame: raw.timeFrame,
+      timeFrame: `${this.formatTime(raw.startTime)} - ${this.formatTime(raw.endTime)}`,
       venue: raw.venue,
       activities: raw.activities,
       equipmentUsed: raw.equipmentUsed ?? '',
@@ -127,10 +220,11 @@ export class StudentProfile {
     if (this.isEditing) {
       this.studentService.updateDailyActivity(this.editingActivityId!, activity).subscribe({
         next: () => {
-          this.refresh$.next();
+          this.loadActivities();
           this.activityForm.reset();
           this.showForm = false;
           this.editingActivityId = null;
+          this.saving = false;
           this.messageService.add({
             severity: 'success',
             summary: 'Actualizat',
@@ -139,6 +233,7 @@ export class StudentProfile {
         },
         error: (err) => {
           console.error('Eroare la actualizare:', err);
+          this.saving = false;
           this.messageService.add({
             severity: 'error',
             summary: 'Eroare',
@@ -149,9 +244,10 @@ export class StudentProfile {
     } else {
       this.studentService.addDailyActivity(this.studentId, activity).subscribe({
         next: () => {
-          this.refresh$.next();
+          this.loadActivities();
           this.activityForm.reset();
           this.showForm = false;
+          this.saving = false;
           this.messageService.add({
             severity: 'success',
             summary: 'Salvat',
@@ -160,6 +256,7 @@ export class StudentProfile {
         },
         error: (err) => {
           console.error('Error saving:', err);
+          this.saving = false;
           this.messageService.add({
             severity: 'error',
             summary: 'Eroare',
@@ -181,7 +278,7 @@ export class StudentProfile {
       accept: () => {
         this.studentService.deleteDailyActivity(activity.id!).subscribe({
           next: () => {
-            this.refresh$.next();
+            this.loadActivities();
             this.messageService.add({
               severity: 'success',
               summary: 'Șters',
@@ -189,7 +286,7 @@ export class StudentProfile {
             });
           },
           error: (err) => {
-            console.error('Error deleting:', err);
+            console.error('Eroare la ștergere:', err);
             this.messageService.add({
               severity: 'error',
               summary: 'Eroare',
