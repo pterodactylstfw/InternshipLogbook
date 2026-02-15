@@ -1,5 +1,6 @@
 using InternshipLogbook.API.Models;
 using Microsoft.EntityFrameworkCore;
+using InternshipLogbook.API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,21 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<InternshipLogbookDbContext>();
+        DbInitializer.Initialize(context);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "A apărut o eroare la popularea bazei de date.");
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

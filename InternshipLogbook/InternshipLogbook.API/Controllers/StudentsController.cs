@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using InternshipLogbook.API.Models;
+using InternshipLogbook.API.Models.DTOs;
+
 namespace InternshipLogbook.API.Controllers
 {
 
@@ -22,13 +24,39 @@ namespace InternshipLogbook.API.Controllers
                 }
 
                 [HttpGet("{id}")]
-                public async Task<ActionResult<Student>> GetStudentById(int id)
+                public async Task<ActionResult<StudentDto>> GetStudentById(int id)
                 {
-                        var student = await _context.Students.FindAsync(id);
-                        if (student == null)
+                        var studentDto = await _context.Students
+                                .Where(s => s.Id == id)
+                                .Select(s => new StudentDto
+                                {
+                                        Id = s.Id,
+                                        FullName = s.FullName,
+                                        YearOfStudy = s.YearOfStudy,
+                                        
+                                        Faculty = s.StudyProgramme.Faculty.Name, 
+                                        StudyProgramme = s.StudyProgramme.Name,
+                                        
+                                        HostInstitution = s.Company != null ? s.Company.Name : "-",
+                                        HostDescription = s.Company != null ? s.Company.Description : "",
+            
+                                        HostTutor = s.HostTutor,
+                                        InternshipPeriod = s.InternshipPeriod,
+                                        InternshipDirector = s.InternshipDirector,
+                                        
+                                        EvaluationQuality = s.EvaluationQuality,
+                                        EvaluationCommunication = s.EvaluationCommunication,
+                                        EvaluationLearning = s.EvaluationLearning,
+                                        SuggestedGrade = s.SuggestedGrade
+                                })
+                                .FirstOrDefaultAsync();
+
+                        if (studentDto == null)
+                        {
                                 return NotFound();
-                        
-                        return student;
+                        }
+
+                        return studentDto;
                 }
 
                 [HttpPost]
