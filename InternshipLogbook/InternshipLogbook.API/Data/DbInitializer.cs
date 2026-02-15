@@ -22,6 +22,7 @@ namespace InternshipLogbook.API.Data
             context.Faculties.Add(faculty);
             context.SaveChanges();
             
+            
             var studyProgramme = new StudyProgramme
             {
                 Name = "Calculatoare",
@@ -56,6 +57,39 @@ namespace InternshipLogbook.API.Data
                 SuggestedGrade = 10
             };
             context.Students.Add(student);
+            context.SaveChanges();
+            
+            var evaluation = new InternshipEvaluation
+            {
+                StudentId = student.Id, // Legătura critică
+                EvaluationDate = DateTime.Now,
+    
+                // Competențe Specifice (1=Beginner, 2=Intermediate, 3=Advanced)
+                TaskSequencing = 2,
+                Documentation = 3,
+                TheoreticalKnowledge = 2,
+                ToolsUsage = 3,
+                Measurements = 2,
+                DataRecording = 3,
+                GraphicPlans = 2,
+                Techniques = 2,
+                SafetyFeatures = 3,
+                ManualAssembly = 1,
+                ElectricalAssembly = 1,
+                Design = 2,
+                Testing = 3,
+
+                // Competențe Generale
+                CompanyKnowledge = 3,
+                CommunicationTeam = 3,
+                CommunicationClients = 2,
+                Reflection = 3,
+                EthicalConduct = 3,
+                OrgCulture = 2,
+                CareerAnalysis = 3
+            };
+            
+            context.InternshipEvaluations.Add(evaluation);
             context.SaveChanges();
             
             var activities = new List<DailyActivity>();

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InternshipLogbook.API.Migrations
 {
     /// <inheritdoc />
-    public partial class Rebuild3NF : Migration
+    public partial class InitialSchema : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -121,10 +121,56 @@ namespace InternshipLogbook.API.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "InternshipEvaluations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    TaskSequencing = table.Column<int>(type: "int", nullable: true),
+                    Documentation = table.Column<int>(type: "int", nullable: true),
+                    TheoreticalKnowledge = table.Column<int>(type: "int", nullable: true),
+                    ToolsUsage = table.Column<int>(type: "int", nullable: true),
+                    Measurements = table.Column<int>(type: "int", nullable: true),
+                    DataRecording = table.Column<int>(type: "int", nullable: true),
+                    GraphicPlans = table.Column<int>(type: "int", nullable: true),
+                    Techniques = table.Column<int>(type: "int", nullable: true),
+                    SafetyFeatures = table.Column<int>(type: "int", nullable: true),
+                    ManualAssembly = table.Column<int>(type: "int", nullable: true),
+                    ElectricalAssembly = table.Column<int>(type: "int", nullable: true),
+                    Design = table.Column<int>(type: "int", nullable: true),
+                    Testing = table.Column<int>(type: "int", nullable: true),
+                    CompanyKnowledge = table.Column<int>(type: "int", nullable: true),
+                    CommunicationTeam = table.Column<int>(type: "int", nullable: true),
+                    CommunicationClients = table.Column<int>(type: "int", nullable: true),
+                    Reflection = table.Column<int>(type: "int", nullable: true),
+                    EthicalConduct = table.Column<int>(type: "int", nullable: true),
+                    OrgCulture = table.Column<int>(type: "int", nullable: true),
+                    CareerAnalysis = table.Column<int>(type: "int", nullable: true),
+                    EvaluationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InternshipEvaluations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_InternshipEvaluations_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_DailyActivities_StudentId",
                 table: "DailyActivities",
                 column: "StudentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InternshipEvaluations_StudentId",
+                table: "InternshipEvaluations",
+                column: "StudentId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_CompanyId",
@@ -147,6 +193,9 @@ namespace InternshipLogbook.API.Migrations
         {
             migrationBuilder.DropTable(
                 name: "DailyActivities");
+
+            migrationBuilder.DropTable(
+                name: "InternshipEvaluations");
 
             migrationBuilder.DropTable(
                 name: "Students");

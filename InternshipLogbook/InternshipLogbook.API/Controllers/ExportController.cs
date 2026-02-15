@@ -24,6 +24,7 @@ namespace InternshipLogbook.API.Controllers
             // 1. Încărcăm studentul cu TOATE relațiile (Eager Loading)
             var student = await _context.Students
                 .Include(s => s.Company)              // JOIN cu Companies
+                .Include(s => s.InternshipEvaluation)
                 .Include(s => s.StudyProgramme)       // JOIN cu StudyProgrammes
                     .ThenInclude(sp => sp.Faculty)    // JOIN cu Faculties (prin StudyProgramme)
                 .FirstOrDefaultAsync(s => s.Id == studentId);

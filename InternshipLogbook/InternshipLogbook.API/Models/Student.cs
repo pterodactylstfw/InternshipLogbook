@@ -26,7 +26,7 @@ public partial class Student
     [ForeignKey("CompanyId")]
     public virtual Company? Company { get; set; }
 
-
+    public virtual InternshipEvaluation? InternshipEvaluation { get; set; }
     public string? HostTutor { get; set; }
     
     

@@ -111,6 +111,88 @@ namespace InternshipLogbook.API.Migrations
                     b.ToTable("Faculties");
                 });
 
+            modelBuilder.Entity("InternshipLogbook.API.Models.InternshipEvaluation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CareerAnalysis")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CommunicationClients")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CommunicationTeam")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CompanyKnowledge")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DataRecording")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Design")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Documentation")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ElectricalAssembly")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EthicalConduct")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EvaluationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("GraphicPlans")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ManualAssembly")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Measurements")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OrgCulture")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Reflection")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SafetyFeatures")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TaskSequencing")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Techniques")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Testing")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TheoreticalKnowledge")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ToolsUsage")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId")
+                        .IsUnique();
+
+                    b.ToTable("InternshipEvaluations");
+                });
+
             modelBuilder.Entity("InternshipLogbook.API.Models.Student", b =>
                 {
                     b.Property<int>("Id")
@@ -200,6 +282,17 @@ namespace InternshipLogbook.API.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("InternshipLogbook.API.Models.InternshipEvaluation", b =>
+                {
+                    b.HasOne("InternshipLogbook.API.Models.Student", "Student")
+                        .WithOne("InternshipEvaluation")
+                        .HasForeignKey("InternshipLogbook.API.Models.InternshipEvaluation", "StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("InternshipLogbook.API.Models.Student", b =>
                 {
                     b.HasOne("InternshipLogbook.API.Models.Company", "Company")
@@ -245,6 +338,8 @@ namespace InternshipLogbook.API.Migrations
             modelBuilder.Entity("InternshipLogbook.API.Models.Student", b =>
                 {
                     b.Navigation("DailyActivities");
+
+                    b.Navigation("InternshipEvaluation");
                 });
 
             modelBuilder.Entity("InternshipLogbook.API.Models.StudyProgramme", b =>
