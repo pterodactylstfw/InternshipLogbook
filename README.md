@@ -1,133 +1,173 @@
-# 🎓 Internship Logbook Management System
+# Internship Logbook
 
-A modern web application designed to streamline the university internship process. It allows students to record daily activities and enables coordinators to monitor progress, validate journals, and generate reports.
+A full-stack web application for managing university internship journals. Built for Transilvania University of Brașov (UNITBV), it enables students to digitally record daily internship activities and coordinators to oversee student progress — replacing the traditional paper-based logbook workflow.
 
-## 🚀 Key Features
+## Overview
 
-### 👨‍🎓 Student Module
-* **Secure Authentication:** Individual accounts with role-based access.
-* **Digital Logbook:** Record daily activities including date, time interval, location, and description.
-* **Progress Tracking:** Visual indicators of internship completion status.
-* **Word Export:** Automatically generate the official Internship Logbook (DOCX) formatted for printing.
+The system implements a role-based architecture with two distinct user experiences:
 
-### 👨‍🏫 Coordinator Module
-* **Dashboard:** Overview of all assigned students and their current status.
-* **Journal Management:** View, edit, or delete student activities (Full CRUD capabilities).
-* **Monitoring:** Track student progress (hours worked, skills acquired).
+- **Students** log in to record their daily internship activities (location, time intervals, tasks performed, skills practiced), track progress visually, and export a fully formatted Word document ready for submission.
+- **Coordinators** access a dashboard showing all assigned students, monitor completion status, review individual journals, and manage activity records.
 
----
+Authentication is handled via JWT tokens with role-based route guards ensuring each user type only accesses their permitted views.
 
-## 🛠️ Tech Stack
+## Features
+
+### Student Portal
+- Record daily activities with date picker, time range selectors, and rich text fields
+- Full CRUD operations — create, edit, and delete activity entries
+- Sortable and filterable activity table with global search
+- Skeleton loading states and error recovery with retry
+- Responsive layout — table view on desktop, card view on mobile
+- One-click Word (DOCX) export using a university-approved template
+- Toast notifications and confirmation dialogs for all actions
+- Dark mode support with persistent preference
+
+### Coordinator Dashboard
+- Overview panel showing total assigned students and completion stats
+- Student cards with email, company, and visual progress bars
+- Click-through to view any student's full journal in a modal dialog
+- Responsive grid layout adapting from multi-column to single-column on mobile
+
+### Authentication
+- JWT-based login with role detection (Student / Coordinator)
+- Automatic routing based on user role after login
+- Protected routes via Angular route guards
+- Form validation with inline error messages
+
+## Tech Stack
 
 ### Backend
-* **Framework:** .NET 8 (ASP.NET Core Web API)
-* **Database:** Microsoft SQL Server (via Entity Framework Core)
-* **Authentication:** JWT (JSON Web Tokens)
-* **Libraries:** `DocX` (for report generation), `AutoMapper`.
+
+| Technology | Purpose |
+|---|---|
+| .NET 8 | ASP.NET Core Web API |
+| Entity Framework Core | ORM with Code-First migrations |
+| SQL Server (LocalDB) | Relational database |
+| JWT Bearer | Authentication & authorization |
+| OpenXML SDK | Word document generation from templates |
 
 ### Frontend
-* **Framework:** Angular 17+ (Standalone Components)
-* **UI Library:** PrimeNG (Material Design components)
-* **Styling:** SCSS, Flexbox, CSS Grid
-* **State Management:** RxJS Observables
 
----
+| Technology | Purpose |
+|---|---|
+| Angular 19 | Standalone components with new control flow (`@if`, `@for`) |
+| PrimeNG (Aura) | UI component library with built-in dark mode |
+| SCSS | Custom theming (UNITBV brand colors) |
+| RxJS | Reactive state management and HTTP handling |
 
-## 📋 Prerequisites
+## Prerequisites
 
-Before running the project, ensure you have the following installed:
+- [Node.js](https://nodejs.org/) v18+
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download)
+- SQL Server LocalDB (included with Visual Studio) or SQL Server Express
+- Angular CLI (`npm install -g @angular/cli`)
 
-1.  **Node.js** (v18 or higher) - [Download](https://nodejs.org/)
-2.  **.NET 8.0 SDK** - [Download](https://dotnet.microsoft.com/download)
-3.  **SQL Server LocalDB** (Included with Visual Studio) OR SQL Server Express.
-4.  **Visual Studio 2022** or **VS Code**.
+## Getting Started
 
----
+### 1. Backend
 
-## ⚙️ Setup & Installation Guide
+```bash
+cd InternshipLogbook.API
+```
 
-### 1. Database & Backend Setup
+Configure `appsettings.json` with your connection string and JWT secret:
 
-1.  Navigate to the `InternshipLogbook.API` folder.
-2.  Open `appsettings.json` and configure the **ConnectionString** and **JWT Key**:
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=InternshipLogbookDB;Trusted_Connection=True;MultipleActiveResultSets=true"
+  },
+  "Jwt": {
+    "Key": "YOUR_SECRET_KEY_MIN_64_CHARACTERS",
+    "Issuer": "https://localhost:5203",
+    "Audience": "https://localhost:5203"
+  }
+}
+```
 
-    ```json
-    {
-      "ConnectionStrings": {
-        "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=InternshipLogbookDB;Trusted_Connection=True;MultipleActiveResultSets=true"
-      },
-      "Jwt": {
-        "Key": "7A912F3B4C5D6E8F9A0B1C2D3E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F",
-        "Issuer": "https://localhost:5203",
-        "Audience": "https://localhost:5203"
-      }
-    }
-    ```
-3.  **Run the Application:**
-    Open the terminal in the API folder and run:
-    ```bash
-    dotnet run
-    ```
-    *Note: The application is configured to automatically create the database and apply migrations on startup.*
+Run the API (database is created and seeded automatically on first run):
 
-4.  The API will be available at `https://localhost:5203` (Swagger UI at `/swagger`).
+```bash
+dotnet run
+```
 
-### 2. Frontend Setup
+The API will be available at `https://localhost:5203` with Swagger UI at `/swagger`.
 
-1.  Navigate to the `client` (or `frontend`) folder in your terminal.
-2.  Install dependencies (required only once):
-    ```bash
-    npm install
-    ```
-3.  Start the development server:
-    ```bash
-    npm start
-    ```
-    *(Or `ng serve` if you have Angular CLI installed globally).*
+### 2. Frontend
 
-4.  Open your browser and navigate to `http://localhost:4200`.
+```bash
+cd internship-logbook-ui
+npm install
+ng serve
+```
 
----
+Open `http://localhost:4200` in your browser.
 
-## 🔐 Default Credentials (Demo)
-
-If the database seed ran successfully, you can use these accounts:
+## Demo Credentials
 
 | Role | Email | Password |
-| :--- | :--- | :--- |
-| **Coordinator** | `admin@test.com` | `admin123` |
-| **Student** | `student@test.com` | `student123` |
+|---|---|---|
+| Student | `student@test.com` | `student123` |
+| Coordinator | `admin@test.com` | `admin123` |
 
-> **Note:** If these accounts do not work, please use the **Register** button on the login page to create a new account.
+## Project Structure
 
----
-
-## ⚠️ Troubleshooting
-
-**Issue: Database connection error**
-* Ensure `SQL Server LocalDB` is running.
-* Verify the `DefaultConnection` string in `appsettings.json` matches your local SQL instance.
-
-**Issue: CORS Error in Browser**
-* The Angular app expects the API to run on port `5203`. If your API runs on a different port, update `proxy.conf.json` or the service URL in `src/app/services/`.
-
-**Issue: "Full Name" not appearing**
-* If you registered a user manually via Swagger or SQL, ensure the `FullName` column in the `Users` table is populated.
-
----
-
-### Project Structure
-
-```text
+```
 InternshipLogbook/
-├── InternshipLogbook.API/       # .NET Web API
-│   ├── Controllers/             # API Endpoints (Auth, Students, Activities)
-│   ├── Models/                  # Database Entities
-│   └── Data/                    # EF Core Context & Migrations
+├── InternshipLogbook.API/
+│   ├── Controllers/
+│   │   ├── AuthController.cs          # Login & JWT generation
+│   │   ├── StudentsController.cs      # Student CRUD endpoints
+│   │   ├── DailyActivitiesController.cs  # Activity CRUD endpoints
+│   │   └── ExportController.cs        # Word document generation
+│   ├── Models/                        # EF Core entities (Student, DailyActivity, Company, etc.)
+│   ├── Services/
+│   │   └── WordExportService.cs       # OpenXML template processing
+│   ├── Templates/
+│   │   └── Template.docx             # University logbook template
+│   └── Data/                          # DbContext & migrations
 │
-└── client/                      # Angular Frontend
-    └── src/
-        └── app/
-            ├── components/      # Dashboard, Profile, Login Pages
-            ├── services/        # HTTP Services
-            └── models/          # TypeScript Interfaces
+└── internship-logbook-ui/
+    └── src/app/
+        ├── login-page/                # Authentication page
+        ├── student-profile/           # Student journal (activities CRUD)
+        ├── coordinator-dashboard/     # Coordinator overview & monitoring
+        ├── services/
+        │   ├── student.ts             # HTTP service for students & activities
+        │   ├── auth/auth.ts           # Authentication service with JWT handling
+        │   └── theme.ts               # Dark mode toggle with localStorage persistence
+        └── models/                    # TypeScript interfaces
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/Auth/login` | Authenticate and receive JWT |
+| `GET` | `/api/Students/{id}` | Get student profile with relations |
+| `GET` | `/api/Students/coordinator/{id}` | Get students assigned to coordinator |
+| `GET` | `/api/DailyActivities/student/{id}` | List activities for a student |
+| `POST` | `/api/DailyActivities/student/{id}` | Create a new activity |
+| `PUT` | `/api/DailyActivities/{id}` | Update an existing activity |
+| `DELETE` | `/api/DailyActivities/{id}` | Delete an activity |
+| `GET` | `/api/Export/word/{id}` | Download generated DOCX logbook |
+
+## Troubleshooting
+
+**Database connection fails**
+
+Ensure SQL Server LocalDB is running. Verify the connection string in `appsettings.json` matches your local instance. You can check with:
+```bash
+sqllocaldb info MSSQLLocalDB
+```
+
+**CORS errors in browser**
+The Angular dev server expects the API on port `5203`. If your API runs on a different port, update the `baseURL` in `src/app/services/student.ts`.
+
+**Word export returns 500**
+Ensure `Templates/Template.docx` exists in the API project root. The template must contain the expected placeholder tags (`{{StudentName}}`, `{{D_1}}`, etc.).
+
+## License
+
+This project was developed as part of the internship program at Transilvania University of Brașov.
