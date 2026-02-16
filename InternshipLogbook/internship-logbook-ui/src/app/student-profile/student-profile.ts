@@ -20,6 +20,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { StudentService } from '../services/student';
 import { DailyActivity } from '../models/daily-activity';
 import { Student } from '../models/student';
+import {Auth} from '../services/auth';
 
 @Component({
   selector: 'app-student-profile',
@@ -51,7 +52,8 @@ export class StudentProfile implements OnInit {
   private fb = inject(FormBuilder);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
-  private studentId = 1;
+  private authService = inject(Auth);
+  private studentId: number | null = null;
 
 
   student: Student | null = null;
@@ -85,11 +87,22 @@ export class StudentProfile implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadStudent();
-    this.loadActivities();
+    this.authService.user$.subscribe(user => {
+      if (user && user.studentId) {
+
+        this.studentId = Number(user.studentId);
+
+        this.loadStudent();
+        this.loadActivities();
+      } else {
+        this.studentId = null;
+      }
+    });
   }
 
   loadStudent(): void {
+    if(!this.studentId) return;
+
     this.studentLoading = true;
     this.studentError = false;
     this.studentService.getStudent(this.studentId).subscribe({
@@ -105,6 +118,8 @@ export class StudentProfile implements OnInit {
   }
 
   loadActivities(): void {
+    if (!this.studentId) return;
+
     this.activitiesLoading = true;
     this.activitiesError = false;
     this.studentService.getDailyActivities(this.studentId).subscribe({
@@ -188,6 +203,15 @@ export class StudentProfile implements OnInit {
   }
 
   onSave(): void {
+    if (!this.studentId) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Eroare',
+        detail: 'Nu ești autentificat sau datele nu s-au încărcat încă.'
+      });
+      return;
+    }
+
     if (this.activityForm.invalid) {
       this.activityForm.markAllAsTouched();
       this.messageService.add({
@@ -206,7 +230,7 @@ export class StudentProfile implements OnInit {
     }
 
     const activity: DailyActivity = {
-      studentId: this.studentId,
+      studentId: this.studentId!,
       dayNumber: raw.dayNumber,
       dateOfActivity: dateStr,
       timeFrame: `${this.formatTime(raw.startTime)} - ${this.formatTime(raw.endTime)}`,
@@ -298,17 +322,20 @@ export class StudentProfile implements OnInit {
     });
   }
   exportToWord() {
-    const studentId = 1; // hardcodat pana la implementare auth cu JWT
+    if (!this.studentId) {
+      this.messageService.add({severity: 'error', summary: 'Eroare', detail: 'Nu ești autentificat!'});
+      return;
+    }
 
-    this.studentService.downloadLogbook(studentId).subscribe({
+    this.studentService.downloadLogbook(this.studentId).subscribe({
       next: (response: Blob) => {
         const fileUrl = window.URL.createObjectURL(response);
 
-
         const anchor = document.createElement('a');
         anchor.href = fileUrl;
+        const name = this.student?.fullName.replace(/\s+/g, '_') || `Student_${this.studentId}`;
 
-        anchor.download = `Caiet_Practica_Student_${studentId}.docx`;
+        anchor.download = `Caiet_Practica_${name}.docx`;
 
         anchor.click();
 
@@ -316,7 +343,7 @@ export class StudentProfile implements OnInit {
       },
       error: (err) => {
         console.error('Eroare la export:', err);
-        alert('Nu s-a putut genera documentul. Asigură-te că Backend-ul rulează.');
+        this.messageService.add({severity: 'error', summary: 'Eroare', detail: 'Nu s-a putut genera documentul.'});
       }
     });
   }
