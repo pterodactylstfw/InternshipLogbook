@@ -1,7 +1,337 @@
-.login-container {
+// ═══ Culori UNITBV ═══
+$unitbv-blue: #1a3a5c;
+$unitbv-blue-light: #2c5f8a;
+$unitbv-orange: #e8731a;
+$unitbv-bg: #f0f4f8;
+
+// ═══ WRAPPER ═══
+.login-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #f8f9fa;
+  min-height: 100vh;
+  background: linear-gradient(135deg, $unitbv-blue 0%, $unitbv-blue-light 50%, darken($unitbv-blue, 5%) 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+}
+
+// ═══ PATTERN DECORATIV ═══
+.login-bg-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 40%),
+    radial-gradient(circle at 60% 80%, rgba(232, 115, 26, 0.08) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+// ═══ CONTAINER CENTRAL ═══
+.login-card-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+}
+
+// ═══ BRAND / LOGO ═══
+.login-brand {
+  text-align: center;
+  margin-bottom: 32px;
+  color: white;
+
+  .brand-icon {
+    width: 72px;
+    height: 72px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    i {
+      font-size: 32px;
+      color: $unitbv-orange;
+    }
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.5px;
+  }
+
+  p {
+    margin: 6px 0 0;
+    font-size: 14px;
+    opacity: 0.7;
+  }
+}
+
+// ═══ CARD ═══
+:host ::ng-deep .login-card {
+  border-radius: 16px !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+
+  .p-card-body {
+    padding: 0 !important;
+  }
+
+  .p-card-content {
+    padding: 36px 32px !important;
+  }
+}
+
+.card-header-section {
+  text-align: center;
+  margin-bottom: 32px;
+
+  h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+    color: $unitbv-blue;
+  }
+
+  p {
+    margin: 8px 0 0;
+    font-size: 14px;
+    color: #64748b;
+  }
+}
+
+// ═══ CÂMPURI FORMULAR ═══
+.login-field {
+  margin-bottom: 24px;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: $unitbv-blue;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+
+    i {
+      font-size: 14px;
+      color: $unitbv-orange;
+    }
+  }
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px 16px;
+    font-size: 15px;
+
+    &::placeholder {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+  }
+}
+
+// ═══ PASSWORD FIELD ═══
+:host ::ng-deep .login-password {
+  width: 100% !important;
+  display: block !important;
+}
+
+:host ::ng-deep .login-password-input {
+  width: 100% !important;
+  padding: 12px 16px !important;
+  font-size: 15px !important;
+}
+
+// ═══ VALIDĂRI ═══
+.field-error {
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  animation: slideDown 0.2s ease-out;
+
+  i { font-size: 12px; }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ═══ ERROR MESSAGE ═══
+.login-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 24px;
+  animation: slideDown 0.3s ease-out;
+
+  i {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+}
+
+// ═══ BUTON SUBMIT ═══
+:host ::ng-deep .login-submit-btn {
+  width: 100% !important;
+  margin-top: 8px;
+
+  .p-button {
+    width: 100%;
+    padding: 14px 24px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    border-radius: 10px !important;
+    background: linear-gradient(135deg, $unitbv-blue 0%, $unitbv-blue-light 100%) !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(26, 58, 92, 0.4) !important;
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+// ═══ SECȚIUNEA DEMO ═══
+.demo-section {
+  margin-top: 32px;
+}
+
+.demo-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e2e8f0;
+  }
+
+  span {
+    font-size: 12px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+}
+
+.demo-accounts {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.demo-account {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: $unitbv-bg;
+  border-radius: 10px;
+  font-size: 13px;
+
+  .demo-role {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+
+    &.student {
+      background: #dbeafe;
+      color: $unitbv-blue;
+    }
+
+    &.admin {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    i { font-size: 12px; }
+  }
+
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    color: #475569;
+    background: white;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid #e2e8f0;
+  }
+}
+
+// ═══ RESPONSIVE ═══
+@media (max-width: 480px) {
+  .login-wrapper {
+    padding: 16px;
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+
+  .login-brand {
+    margin-bottom: 24px;
+
+    .brand-icon {
+      width: 60px;
+      height: 60px;
+      i { font-size: 26px; }
+    }
+
+    h1 { font-size: 20px; }
+  }
+
+  :host ::ng-deep .login-card .p-card-content {
+    padding: 28px 20px !important;
+  }
+
+  .demo-account {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 }

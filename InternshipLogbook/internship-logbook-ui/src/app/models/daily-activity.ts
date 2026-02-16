@@ -7,6 +7,6 @@ export interface DailyActivity {
   venue: string;
   activities: string;
   equipmentUsed: string;
-  practicedSkills: string;
-  personalObservations: string;
+  skillsPracticed: string;
+  observations: string;
 }

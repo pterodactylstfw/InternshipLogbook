@@ -306,8 +306,9 @@
             <td>{{ activity.venue }}</td>
             <td class="cell-wrap">{{ activity.activities }}</td>
             <td class="cell-wrap">{{ activity.equipmentUsed }}</td>
-            <td class="cell-wrap">{{ activity.practicedSkills }}</td>
-            <td class="cell-wrap">{{ activity.personalObservations }}</td>
+
+            <td class="cell-wrap">{{ activity.skillsPracticed }}</td>
+            <td class="cell-wrap">{{ activity.observations }}</td>
             <td>
               <div class="action-buttons">
                 <p-button icon="pi pi-pencil" severity="info" [rounded]="true" [text]="true"
@@ -369,16 +370,16 @@
                 <span>{{ activity.equipmentUsed }}</span>
               </div>
             }
-            @if (activity.practicedSkills) {
+            @if (activity.skillsPracticed) {
               <div class="card-row">
                 <i class="pi pi-star"></i>
-                <span>{{ activity.practicedSkills }}</span>
+                <span>{{ activity.skillsPracticed }}</span>
               </div>
             }
-            @if (activity.personalObservations) {
+            @if (activity.observations) {
               <div class="card-row">
                 <i class="pi pi-comment"></i>
-                <span>{{ activity.personalObservations }}</span>
+                <span>{{ activity.observations }}</span>
               </div>
             }
           </div>

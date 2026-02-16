@@ -164,8 +164,8 @@ export class StudentProfile implements OnInit {
       venue: activity.venue,
       activities: activity.activities,
       equipmentUsed: activity.equipmentUsed,
-      practicedSkills: activity.practicedSkills,
-      personalObservations: activity.personalObservations,
+      practicedSkills: activity.skillsPracticed,
+      personalObservations: activity.observations,
     });
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -237,8 +237,8 @@ export class StudentProfile implements OnInit {
       venue: raw.venue,
       activities: raw.activities,
       equipmentUsed: raw.equipmentUsed ?? '',
-      practicedSkills: raw.practicedSkills ?? '',
-      personalObservations: raw.personalObservations ?? '',
+      skillsPracticed: raw.practicedSkills ?? '',
+      observations: raw.personalObservations ?? '',
     };
 
     if (this.isEditing) {

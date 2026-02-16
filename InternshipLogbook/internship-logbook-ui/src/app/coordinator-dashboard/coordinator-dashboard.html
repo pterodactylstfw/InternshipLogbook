@@ -1,19 +1,21 @@
-<div class="p-4 dashboard-container">
+<div class="dashboard-container">
 
-  <p-card class="coordinator-profile-card mb-5">
-    <div class="profile-header-gradient">
-      <div class="profile-avatar">
-        <i class="pi pi-user-edit"></i>
+  <!-- PROFIL COORDONATOR -->
+  <p-card styleClass="coordinator-profile-card">
+    <ng-template #header>
+      <div class="profile-header-gradient">
+        <div class="profile-avatar">
+          <i class="pi pi-user-edit"></i>
+        </div>
+        <div class="profile-info">
+          <h2>{{ (authService.user$ | async)?.fullName || 'Nume Indisponibil' }}</h2>
+          <p class="subtitle">Coordonator Stagii Practică - IESC</p>
+        </div>
+        <div class="header-actions">
+          <p-button label="Ieșire" icon="pi pi-sign-out" severity="danger" [outlined]="true" (onClick)="logout()"></p-button>
+        </div>
       </div>
-      <div class="profile-info">
-        <h2>{{ (authService.user$ | async)?.fullName || 'Nume Indisponibil' }}</h2>
-
-        <p class="subtitle">Coordonator Stagii Practică - IESC</p>
-      </div>
-      <div class="header-actions">
-        <p-button label="Ieșire" icon="pi pi-sign-out" severity="danger" (onClick)="logout()"></p-button>
-      </div>
-    </div>
+    </ng-template>
 
     <div class="profile-summary-bar">
       <div class="summary-item">
@@ -27,11 +29,13 @@
     </div>
   </p-card>
 
-  <h3 class="section-title mb-3"><i class="pi pi-list mr-2"></i> Studenți în Coordonare</h3>
+  <!-- TITLU SECȚIUNE -->
+  <h3 class="section-title"><i class="pi pi-list"></i> Studenți în Coordonare</h3>
 
+  <!-- LISTA STUDENȚI -->
   <div class="students-grid">
     @for (student of students; track student.id) {
-      <p-card class="student-item-card">
+      <p-card styleClass="student-item-card">
         <div class="student-card-header">
           <div class="student-basic-info">
             <span class="student-name">{{ student.name }}</span>
@@ -46,7 +50,7 @@
           </p-button>
         </div>
 
-        <div class="profile-details compact">
+        <div class="student-details">
           <div class="detail-item">
             <i class="pi pi-envelope"></i>
             <div>
@@ -65,44 +69,94 @@
             <i class="pi pi-chart-bar"></i>
             <div>
               <span class="detail-label">Progres</span>
-              <span class="detail-value">{{ student.progress }}%</span>
+              <span class="detail-value progress-value">{{ student.progress }}%</span>
             </div>
           </div>
+        </div>
+
+        <!-- PROGRESS BAR -->
+        <div class="progress-bar-container">
+          <div class="progress-bar" [style.width.%]="student.progress"></div>
         </div>
       </p-card>
     }
   </div>
 </div>
 
+<!-- DIALOG JURNAL -->
 <p-dialog
   [(visible)]="displayJournal"
   [header]="'Jurnal de Practică - ' + selectedStudentName"
   [modal]="true"
-  [style]="{width: '70vw'}"
+  [style]="{width: '90vw', maxWidth: '900px'}"
   [maximizable]="true"
   [draggable]="false"
-  [resizable]="false">
+  [resizable]="false"
+  [breakpoints]="{'768px': '95vw'}">
 
-  <p-table [value]="selectedStudentActivities" ...>
-    <ng-template pTemplate="header">
-      <tr>
-        <th>Data</th>
-        <th>Interval</th>
-        <th>Locație</th>
-        <th>Activitate</th>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-activity>
-      <tr>
-        <td>{{ activity.dateOfActivity | date:'dd.MM.yyyy' }}</td>
-        <td>{{ activity.timeFrame }}</td>
-        <td>{{ activity.venue }}</td>
-        <td>{{ activity.activities }}</td>
-      </tr>
-    </ng-template>
-  </p-table>
+  <!-- TABEL DESKTOP -->
+  <div class="journal-desktop">
+    <p-table [value]="selectedStudentActivities" [paginator]="true" [rows]="5"
+             styleClass="p-datatable-striped">
+      <ng-template #header>
+        <tr>
+          <th style="width: 60px">Ziua</th>
+          <th style="width: 100px">Data</th>
+          <th style="width: 100px">Interval</th>
+          <th>Locație</th>
+          <th>Activitate</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-activity>
+        <tr>
+          <td><span class="day-badge-sm">{{ activity.dayNumber }}</span></td>
+          <td>{{ activity.dateOfActivity | date:'dd.MM.yyyy' }}</td>
+          <td>{{ activity.timeFrame }}</td>
+          <td>{{ activity.venue }}</td>
+          <td class="cell-wrap">{{ activity.activities }}</td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td colspan="5" class="empty-journal">
+            <i class="pi pi-inbox"></i>
+            <p>Studentul nu are activități înregistrate.</p>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
 
-  <ng-template pTemplate="footer">
-    <p-button icon="pi pi-check" (click)="displayJournal=false" label="Închide" styleClass="p-button-text"></p-button>
+  <!-- CARDS MOBILE (în dialog) -->
+  <div class="journal-mobile">
+    @if (selectedStudentActivities.length === 0) {
+      <div class="empty-journal">
+        <i class="pi pi-inbox"></i>
+        <p>Studentul nu are activități înregistrate.</p>
+      </div>
+    }
+    @for (activity of selectedStudentActivities; track activity.id) {
+      <div class="journal-card">
+        <div class="journal-card-header">
+          <span class="day-badge-sm">{{ activity.dayNumber }}</span>
+          <span class="journal-date">{{ activity.dateOfActivity | date:'dd.MM.yyyy' }}</span>
+          <span class="journal-time">{{ activity.timeFrame }}</span>
+        </div>
+        <div class="journal-card-body">
+          <div class="journal-row">
+            <i class="pi pi-map-marker"></i>
+            <span>{{ activity.venue }}</span>
+          </div>
+          <div class="journal-row">
+            <i class="pi pi-list"></i>
+            <span>{{ activity.activities }}</span>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <ng-template #footer>
+    <p-button icon="pi pi-times" (onClick)="displayJournal=false" label="Închide" severity="secondary" [outlined]="true"></p-button>
   </ng-template>
 </p-dialog>
