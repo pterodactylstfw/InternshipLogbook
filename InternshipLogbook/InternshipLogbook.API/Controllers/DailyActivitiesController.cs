@@ -8,7 +8,7 @@ namespace InternshipLogbook.API.Controllers
     [ApiController]
     public class DailyActivitiesController: ControllerBase
     {
-        private readonly InternshipLogbookDbContext _context;
+        private readonly InternshipLogbookDbContext _context; // legatura bd
         
         public DailyActivitiesController(InternshipLogbookDbContext context)
         {
