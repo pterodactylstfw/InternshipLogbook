@@ -32,4 +32,10 @@ export class StudentService {
   deleteDailyActivity(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseURL}/DailyActivities/${id}`);
   }
+
+  downloadLogbook(studentId: number) {
+    return this.http.get(`${this.baseURL}/Export/word/${studentId}`, {
+      responseType: 'blob'
+    });
+  }
 }

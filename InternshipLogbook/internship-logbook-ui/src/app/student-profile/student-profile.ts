@@ -297,4 +297,27 @@ export class StudentProfile implements OnInit {
       },
     });
   }
+  exportToWord() {
+    const studentId = 1; // hardcodat pana la implementare auth cu JWT
+
+    this.studentService.downloadLogbook(studentId).subscribe({
+      next: (response: Blob) => {
+        const fileUrl = window.URL.createObjectURL(response);
+
+
+        const anchor = document.createElement('a');
+        anchor.href = fileUrl;
+
+        anchor.download = `Caiet_Practica_Student_${studentId}.docx`;
+
+        anchor.click();
+
+        window.URL.revokeObjectURL(fileUrl);
+      },
+      error: (err) => {
+        console.error('Eroare la export:', err);
+        alert('Nu s-a putut genera documentul. Asigură-te că Backend-ul rulează.');
+      }
+    });
+  }
 }

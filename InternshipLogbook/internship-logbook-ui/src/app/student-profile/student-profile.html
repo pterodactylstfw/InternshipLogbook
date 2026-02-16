@@ -99,6 +99,14 @@
     [severity]="showForm ? 'secondary' : 'primary'"
     (onClick)="toggleForm()">
   </p-button>
+
+  <p-button
+    label="Export Word"
+    icon="pi pi-file-word"
+    severity="success"
+    class="ml-2"
+    (onClick)="exportToWord()">
+  </p-button>
 </div>
 
 @if (showForm) {
