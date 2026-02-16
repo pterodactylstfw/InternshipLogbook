@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InternshipLogbook.API.Migrations
 {
     [DbContext(typeof(InternshipLogbookDbContext))]
-    [Migration("20260216140437_InitialSchema")]
-    partial class InitialSchema
+    [Migration("20260216145339_RebuildWithAuth")]
+    partial class RebuildWithAuth
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -274,6 +274,36 @@ namespace InternshipLogbook.API.Migrations
                     b.ToTable("StudyProgrammes");
                 });
 
+            modelBuilder.Entity("InternshipLogbook.API.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("InternshipLogbook.API.Models.DailyActivity", b =>
                 {
                     b.HasOne("InternshipLogbook.API.Models.Student", "Student")
@@ -326,6 +356,15 @@ namespace InternshipLogbook.API.Migrations
                         .HasConstraintName("FK_StudyProgrammes_Faculties");
 
                     b.Navigation("Faculty");
+                });
+
+            modelBuilder.Entity("InternshipLogbook.API.Models.User", b =>
+                {
+                    b.HasOne("InternshipLogbook.API.Models.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("InternshipLogbook.API.Models.Company", b =>

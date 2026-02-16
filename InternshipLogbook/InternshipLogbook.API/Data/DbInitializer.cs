@@ -1,4 +1,6 @@
-﻿using InternshipLogbook.API.Models;
+﻿using System.Security.Cryptography;
+using System.Text;
+using InternshipLogbook.API.Models;
 
 namespace InternshipLogbook.API.Data
 {
@@ -6,9 +8,8 @@ namespace InternshipLogbook.API.Data
     {
         public static void Initialize(InternshipLogbookDbContext context)
         {
-            context.Database.EnsureCreated();
 
-            if (context.Students.Any()) // daca avem studenti nu mai adaugam
+            if (context.Users.Any()) // daca avem utilizatori nu mai adaugam
             {
                 return;
             }
@@ -110,8 +111,9 @@ namespace InternshipLogbook.API.Data
                     DateOfActivity = DateOnly.FromDateTime(startDate),
                     TimeFrame = "09:00 - 17:00",
                     Venue = "Sediul Firmei / Birou R&D",
-                    Activities = $"Studiul documentației proiectului și configurarea mediului de dezvoltare (Ziua {i}). " +
-                                 "Implementare funcționalități Backend în C#.",
+                    Activities =
+                        $"Studiul documentației proiectului și configurarea mediului de dezvoltare (Ziua {i}). " +
+                        "Implementare funcționalități Backend în C#.",
                     EquipmentUsed = "Laptop, Visual Studio 2026, SQL Server",
                     SkillsPracticed = "C#, Entity Framework, Git",
                     Observations = "Am învățat cum se face debugging eficient într-o aplicație Enterprise."
@@ -122,6 +124,31 @@ namespace InternshipLogbook.API.Data
 
             context.DailyActivities.AddRange(activities);
             context.SaveChanges();
+            
+            var userStudent = new User
+            {
+                Email = "student@test.com",
+                PasswordHash = HashPassword("student123"), // Parola: student123
+                Role = "Student",
+                StudentId = student.Id // Legătura cu profilul
+            };
+            context.Users.Add(userStudent);
+            
+            var userCoord = new User
+            {
+                Email = "admin@test.com",
+                PasswordHash = HashPassword("admin123"), // Parola: admin123
+                Role = "Coordinator",
+                StudentId = null
+            };
+            context.Users.Add(userCoord);
+            context.SaveChanges();
         }
-    }
+        
+        private static string HashPassword(string password)
+        {
+            using var sha256 = SHA256.Create();
+            var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return Convert.ToBase64String(bytes);
+        } }
 }
