@@ -20,7 +20,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { StudentService } from '../services/student';
 import { DailyActivity } from '../models/daily-activity';
 import { Student } from '../models/student';
-import {Auth} from '../services/auth';
+import {Auth} from '../services/auth/auth';
 
 @Component({
   selector: 'app-student-profile',

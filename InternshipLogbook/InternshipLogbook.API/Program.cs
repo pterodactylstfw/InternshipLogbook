@@ -2,6 +2,7 @@ using System.Text;
 using InternshipLogbook.API.Models;
 using Microsoft.EntityFrameworkCore;
 using InternshipLogbook.API.Data;
+using InternshipLogbook.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -75,6 +76,7 @@ app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
+app.UseMiddleware<JwtChecker>();
 app.UseAuthorization();
 
 app.MapControllers();

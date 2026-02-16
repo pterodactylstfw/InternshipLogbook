@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {Auth} from '../services/auth';
+import {Auth} from '../services/auth/auth';
 import {Router} from '@angular/router';
 import {Button} from 'primeng/button';
 import {Password, PasswordModule} from 'primeng/password';
@@ -42,15 +42,15 @@ export class LoginPage {
 
     this.authService.login(email, password).subscribe({
       next: (res) => {
+        this.isLoading = false;
         if (res.role === 'Coordinator') {
-          console.log("Coordonator logat!");
-          // this.router.navigate(['/coordinator-dashboard']);
-        } else {
-          // E student
+          this.router.navigate(['/coordinator-dashboard']);
+        } else if (res.role === 'Student') {
           this.router.navigate(['/student-profile']);
         }
       },
       error: (err) => {
+        console.error("Eroare la logare:", err);
         this.errorMessage = 'Email sau parolă incorectă!';
         this.isLoading = false;
       }

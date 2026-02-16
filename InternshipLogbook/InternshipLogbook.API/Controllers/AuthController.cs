@@ -35,6 +35,9 @@ namespace InternshipLogbook.API.Controllers
             var inputPassHash = HashPassword(req.Password);
             if(user.PasswordHash != inputPassHash)
                 return Unauthorized("Incorrect password");
+            
+            user.SecurityStamp = Guid.NewGuid().ToString();
+            await _context.SaveChangesAsync();
 
             var token = GenerateJwtToken(user);
 
@@ -56,7 +59,8 @@ namespace InternshipLogbook.API.Controllers
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim("SecurityStamp", user.SecurityStamp)
             };
             
             if(user.StudentId.HasValue)

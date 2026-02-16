@@ -22,5 +22,7 @@ namespace InternshipLogbook.API.Models
         public int? StudentId { get; set; } // optional, coordonatorul nu e student
 
         public virtual Student? Student { get; set; }
+        
+        public string SecurityStamp { get; set; } = Guid.NewGuid().ToString(); // invalidare jwt
     }
 }
