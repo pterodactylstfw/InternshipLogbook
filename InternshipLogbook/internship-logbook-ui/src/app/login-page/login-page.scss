@@ -335,3 +335,38 @@ $unitbv-bg: #f0f4f8;
     gap: 8px;
   }
 }
+
+html.p-dark {
+  .login-wrapper {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  }
+
+  .card-header-section {
+    h2 { color: #e2e8f0; }
+    p { color: #94a3b8; }
+  }
+
+  .login-field label {
+    color: #94a3b8;
+
+    i { color: $unitbv-orange; }
+  }
+
+  .demo-account {
+    background: #1e293b;
+
+    code {
+      background: #0f172a;
+      color: #cbd5e1;
+      border-color: #334155;
+    }
+  }
+
+  .demo-divider {
+    &::before, &::after {
+      background: #334155;
+    }
+
+    span { color: #64748b; }
+  }
+}

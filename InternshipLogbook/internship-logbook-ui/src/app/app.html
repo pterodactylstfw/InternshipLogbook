@@ -11,6 +11,10 @@
         </a>
       </div>
     }
+    <button class="theme-toggle" (click)="toggleTheme()"
+            [attr.aria-label]="themeService.isDark() ? 'Mod luminos' : 'Mod întunecat'">
+      <i [class]="themeService.isDark() ? 'pi pi-sun' : 'pi pi-moon'"></i>
+    </button>
   </div>
 </nav>
 

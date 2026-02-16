@@ -396,3 +396,67 @@ $unitbv-bg: #f0f4f8;
     }
   }
 }
+
+html.p-dark {
+  .profile-header-gradient {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  }
+
+  .profile-summary-bar {
+    background: #1e293b;
+    border-color: #334155;
+
+    .summary-item {
+      color: #e2e8f0;
+    }
+  }
+
+  .section-title {
+    color: #e2e8f0;
+  }
+
+  :host ::ng-deep .student-item-card {
+    border-color: #334155;
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  .student-card-header {
+    border-color: #334155;
+
+    .student-name {
+      color: #e2e8f0;
+    }
+  }
+
+  .student-details .detail-item {
+    background: #0f172a;
+
+    .detail-label { color: #64748b; }
+    .detail-value { color: #cbd5e1; }
+  }
+
+  .progress-bar-container {
+    background: #334155;
+  }
+
+  .day-badge-sm {
+    background: #334155;
+  }
+
+  .journal-card {
+    background: #1e293b;
+    border-color: #334155;
+
+    .journal-card-header {
+      background: #0f172a;
+      border-color: #334155;
+    }
+
+    .journal-row {
+      color: #cbd5e1;
+    }
+  }
+}

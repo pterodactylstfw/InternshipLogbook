@@ -17,7 +17,10 @@ export const appConfig: ApplicationConfig = {
     { provide: ConfirmationService, useClass: ConfirmationService },
     providePrimeNG({
       theme: {
-        preset: Aura
+        preset: Aura,
+        options: {
+          darkModeSelector: '.p-dark',
+        }
       },
       ripple: true
     })

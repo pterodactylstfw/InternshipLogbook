@@ -1,5 +1,8 @@
+$unitbv-blue: #1a3a5c;
+$unitbv-blue-light: #2c5f8a;
+
 .app-navbar {
-  background: linear-gradient(135deg, #1a3a5c 0%, #2c5f8a 100%);
+  background: linear-gradient(135deg, $unitbv-blue 0%, $unitbv-blue-light 100%);
   padding: 0 32px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
@@ -22,6 +25,12 @@
     letter-spacing: 0.5px;
 
     i { font-size: 22px; }
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 
   .nav-links {
@@ -48,6 +57,37 @@
   }
 }
 
+// ═══ THEME TOGGLE ═══
+.theme-toggle {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+
+  i {
+    font-size: 18px;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+
+    i { transform: rotate(20deg); }
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
 .app-wrapper {
   max-width: 1200px;
   margin: 0 auto;
@@ -56,11 +96,44 @@
 }
 
 .app-footer {
-  background: #1a3a5c;
+  background: $unitbv-blue;
   color: rgba(255, 255, 255, 0.7);
   text-align: center;
   padding: 16px;
   font-size: 13px;
 
   p { margin: 0; }
+}
+
+// ═══ DARK MODE ═══
+html.p-dark {
+  .app-navbar {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  .app-footer {
+    background: #0f172a;
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+// ═══ RESPONSIVE ═══
+@media (max-width: 768px) {
+  .app-navbar {
+    padding: 0 16px;
+  }
+
+  .app-wrapper {
+    padding: 16px;
+  }
+
+  .nav-brand span {
+    font-size: 15px;
+  }
+
+  .nav-link {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
 }

@@ -457,3 +457,65 @@ $unitbv-bg: #f0f4f8;
     }
   }
 }
+
+html.p-dark {
+  .profile-header {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  }
+
+  .profile-details .detail-item {
+    background: #1e293b;
+
+    .detail-label { color: #94a3b8; }
+    .detail-value { color: #e2e8f0; }
+  }
+
+  .day-badge {
+    background: #334155;
+    color: #f8fafc;
+  }
+
+  .activity-card {
+    background: #1e293b;
+    border-color: #334155;
+
+    .card-top {
+      background: #0f172a;
+      border-color: #334155;
+    }
+
+    .card-row {
+      color: #cbd5e1;
+      border-color: #1e293b;
+    }
+  }
+
+  .field label {
+    color: #94a3b8;
+  }
+
+  .skeleton-profile,
+  .skeleton-table {
+    background: transparent;
+  }
+
+  :host ::ng-deep .form-card {
+    border-left-color: $unitbv-orange;
+  }
+
+  :host ::ng-deep .p-datatable {
+    .p-datatable-thead > tr > th {
+      background: #1e293b !important;
+      color: #e2e8f0 !important;
+    }
+
+    .p-datatable-tbody > tr:hover {
+      background: rgba(255, 255, 255, 0.05) !important;
+    }
+  }
+
+  .error-state {
+    h3 { color: #e2e8f0; }
+    p { color: #94a3b8; }
+  }
+}
