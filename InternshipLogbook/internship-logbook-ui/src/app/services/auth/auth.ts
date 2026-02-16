@@ -52,7 +52,8 @@ export class Auth {
         email: decoded.email,
         role: decoded.role,
         studentId: decoded.StudentId,
-        id: decoded.nameid
+        id: decoded.nameid,
+        fullName: decoded.FullName || decoded.email
       };
 
       this.userSubject.next(user);

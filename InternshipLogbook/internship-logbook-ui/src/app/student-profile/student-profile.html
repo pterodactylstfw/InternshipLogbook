@@ -42,6 +42,14 @@
           <h2>{{ student.fullName }}</h2>
           <p class="subtitle">{{ student.studyProgramme }}</p>
         </div>
+        <p-button
+          label="Ieșire"
+          icon="pi pi-sign-out"
+          severity="danger"
+          [outlined]="true"
+          class="ml-2"
+          (onClick)="onLogout()">
+        </p-button>
       </div>
     </ng-template>
 
@@ -107,6 +115,7 @@
     class="ml-2"
     (onClick)="exportToWord()">
   </p-button>
+
 </div>
 
 @if (showForm) {

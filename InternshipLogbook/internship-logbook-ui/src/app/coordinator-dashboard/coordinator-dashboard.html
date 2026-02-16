@@ -1,0 +1,108 @@
+<div class="p-4 dashboard-container">
+
+  <p-card class="coordinator-profile-card mb-5">
+    <div class="profile-header-gradient">
+      <div class="profile-avatar">
+        <i class="pi pi-user-edit"></i>
+      </div>
+      <div class="profile-info">
+        <h2>{{ (authService.user$ | async)?.fullName || 'Nume Indisponibil' }}</h2>
+
+        <p class="subtitle">Coordonator Stagii Practică - IESC</p>
+      </div>
+      <div class="header-actions">
+        <p-button label="Ieșire" icon="pi pi-sign-out" severity="danger" (onClick)="logout()"></p-button>
+      </div>
+    </div>
+
+    <div class="profile-summary-bar">
+      <div class="summary-item">
+        <i class="pi pi-users"></i>
+        <span><strong>{{ students.length }}</strong> Studenți Arondați</span>
+      </div>
+      <div class="summary-item">
+        <i class="pi pi-check-circle"></i>
+        <span><strong>1</strong> Stagiu Finalizat</span>
+      </div>
+    </div>
+  </p-card>
+
+  <h3 class="section-title mb-3"><i class="pi pi-list mr-2"></i> Studenți în Coordonare</h3>
+
+  <div class="students-grid">
+    @for (student of students; track student.id) {
+      <p-card class="student-item-card">
+        <div class="student-card-header">
+          <div class="student-basic-info">
+            <span class="student-name">{{ student.name }}</span>
+            <p-tag [value]="student.status" [severity]="getSeverity(student.status)" [rounded]="true"></p-tag>
+          </div>
+          <p-button
+            label="Vezi Jurnal"
+            icon="pi pi-arrow-right"
+            iconPos="right"
+            [text]="true"
+            (onClick)="viewJournal(student)">
+          </p-button>
+        </div>
+
+        <div class="profile-details compact">
+          <div class="detail-item">
+            <i class="pi pi-envelope"></i>
+            <div>
+              <span class="detail-label">Email</span>
+              <span class="detail-value">{{ student.email }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <i class="pi pi-briefcase"></i>
+            <div>
+              <span class="detail-label">Companie</span>
+              <span class="detail-value">{{ student.company }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <i class="pi pi-chart-bar"></i>
+            <div>
+              <span class="detail-label">Progres</span>
+              <span class="detail-value">{{ student.progress }}%</span>
+            </div>
+          </div>
+        </div>
+      </p-card>
+    }
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="displayJournal"
+  [header]="'Jurnal de Practică - ' + selectedStudentName"
+  [modal]="true"
+  [style]="{width: '70vw'}"
+  [maximizable]="true"
+  [draggable]="false"
+  [resizable]="false">
+
+  <p-table [value]="selectedStudentActivities" ...>
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Data</th>
+        <th>Interval</th>
+        <th>Locație</th>
+        <th>Activitate</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-activity>
+      <tr>
+        <td>{{ activity.dateOfActivity | date:'dd.MM.yyyy' }}</td>
+        <td>{{ activity.timeFrame }}</td>
+        <td>{{ activity.venue }}</td>
+        <td>{{ activity.activities }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <ng-template pTemplate="footer">
+    <p-button icon="pi pi-check" (click)="displayJournal=false" label="Închide" styleClass="p-button-text"></p-button>
+  </ng-template>
+</p-dialog>

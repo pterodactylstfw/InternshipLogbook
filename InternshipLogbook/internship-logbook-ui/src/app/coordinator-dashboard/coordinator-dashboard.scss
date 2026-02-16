@@ -1,0 +1,118 @@
+$unitbv-blue: #1a3a5c;
+$unitbv-blue-light: #2c5f8a;
+$unitbv-orange: #e8731a;
+$unitbv-bg: #f0f4f8;
+
+:host ::ng-deep .coordinator-profile-card {
+  .p-card-body { padding: 0; }
+
+  .profile-header-gradient {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 30px;
+    background: linear-gradient(135deg, $unitbv-blue 0%, $unitbv-blue-light 100%);
+    border-radius: 12px 12px 0 0;
+    color: white;
+
+    .profile-avatar {
+      width: 64px;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      i { font-size: 28px; }
+    }
+
+    .profile-info h2 { margin: 0; font-size: 24px; }
+    .subtitle { margin: 4px 0 0; opacity: 0.8; font-size: 14px; }
+    .header-actions { margin-left: auto; }
+  }
+
+  .profile-summary-bar {
+    display: flex;
+    gap: 40px;
+    padding: 15px 30px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+
+    .summary-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: $unitbv-blue;
+      i { color: $unitbv-orange; font-size: 18px; }
+    }
+  }
+}
+
+.section-title {
+  color: $unitbv-blue;
+  font-weight: 700;
+  border-left: 4px solid $unitbv-orange;
+  padding-left: 12px;
+}
+
+:host ::ng-deep .student-item-card {
+  margin-bottom: 16px;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  .student-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed #e2e8f0;
+    margin-bottom: 16px;
+
+    .student-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: $unitbv-blue;
+      margin-right: 12px;
+    }
+  }
+}
+
+.profile-details.compact {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+
+  .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    background: #f1f5f9;
+    border-radius: 6px;
+
+    i { color: $unitbv-orange; font-size: 14px; }
+    .detail-label { font-size: 10px; color: #64748b; text-transform: uppercase; display: block; }
+    .detail-value { font-size: 13px; color: $unitbv-blue; font-weight: 500; }
+  }
+}
+
+.profile-info {
+  h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #ffffff !important;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    margin: 4px 0 0;
+    opacity: 0.9;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9)
+  }
+}

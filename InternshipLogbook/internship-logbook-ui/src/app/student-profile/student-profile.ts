@@ -347,4 +347,8 @@ export class StudentProfile implements OnInit {
       }
     });
   }
+
+  onLogout(): void {
+    this.authService.logout();
+  }
 }

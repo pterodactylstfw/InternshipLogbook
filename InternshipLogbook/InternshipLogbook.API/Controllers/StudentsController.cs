@@ -59,6 +59,27 @@ namespace InternshipLogbook.API.Controllers
 
                         return studentDto;
                 }
+                
+                [HttpGet("coordinator/{coordinatorId}")]
+                public async Task<ActionResult<IEnumerable<object>>> GetStudentsByCoordinator(int coordinatorId)
+                {
+                        var students = await _context.Users
+                                .Include(u => u.Student)
+                                .ThenInclude(s => s.Company)
+                                .Where(u => u.Student != null && u.Student.CoordinatorId == coordinatorId)
+                                .Select(u => new 
+                                {
+                                        Id = u.Student.Id,
+                                        Name = u.Student.FullName,
+                                        Email = u.Email,
+                                        Company = u.Student.Company != null ? u.Student.Company.Name : "-",
+                                        Status = "Completed", 
+                                        Progress = 100 
+                                })
+                                .ToListAsync();
+
+                        return Ok(students);
+                }
 
                 [HttpPost]
                 public async Task<ActionResult<Student>> PostStudent(Student student)

@@ -38,4 +38,8 @@ export class StudentService {
       responseType: 'blob'
     });
   }
+
+  getStudentsByCoordinator(coordId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseURL}/Students/coordinator/${coordId}`);
+  }
 }

@@ -4,11 +4,13 @@
       <i class="pi pi-book"></i>
       <span>Practică UNITBV</span>
     </div>
-    <div class="nav-links">
-      <a routerLink="/student-profile" class="nav-link active">
-        <i class="pi pi-user"></i> Jurnal de Practică
-      </a>
-    </div>
+    @if (router.url.includes('/student-profile')) {
+      <div class="nav-links">
+        <a routerLink="/student-profile" class="nav-link active">
+          <i class="pi pi-user"></i> Jurnal de Practică
+        </a>
+      </div>
+    }
   </div>
 </nav>
 
