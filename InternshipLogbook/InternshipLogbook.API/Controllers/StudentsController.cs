@@ -47,7 +47,8 @@ namespace InternshipLogbook.API.Controllers
                                         EvaluationQuality = s.EvaluationQuality,
                                         EvaluationCommunication = s.EvaluationCommunication,
                                         EvaluationLearning = s.EvaluationLearning,
-                                        SuggestedGrade = s.SuggestedGrade
+                                        SuggestedGrade = s.SuggestedGrade,
+                                        CoordinatorName = s.Coordinator != null ? s.Coordinator.FullName : "Nerealocat"
                                 })
                                 .FirstOrDefaultAsync();
 

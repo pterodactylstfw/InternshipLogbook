@@ -34,6 +34,10 @@ public partial class Student
     public string? EvaluationCommunication { get; set; }
     public string? EvaluationLearning { get; set; }
     public int? SuggestedGrade { get; set; }
+    
+    public int? CoordinatorId { get; set; }
+    [ForeignKey("CoordinatorId")]
+    public virtual User? Coordinator { get; set; }
 
     
     public virtual ICollection<DailyActivity> DailyActivities { get; set; } = new List<DailyActivity>();

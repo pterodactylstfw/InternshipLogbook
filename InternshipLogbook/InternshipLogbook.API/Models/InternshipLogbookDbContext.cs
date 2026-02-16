@@ -51,21 +51,32 @@ public partial class InternshipLogbookDbContext : DbContext
         modelBuilder.Entity<Student>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Students");
-            
+    
             entity.Property(e => e.FullName).HasMaxLength(100);
             entity.Property(e => e.HostTutor).HasMaxLength(100);
             entity.Property(e => e.InternshipDirector).HasMaxLength(100);
             entity.Property(e => e.InternshipPeriod).HasMaxLength(100);
+
+            // Relația cu Compania
             entity.HasOne(d => d.Company)
                 .WithMany(p => p.Students)
                 .HasForeignKey(d => d.CompanyId)
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("FK_Students_Companies");
+
+            // Relația cu Programul de Studiu
             entity.HasOne(d => d.StudyProgramme)
                 .WithMany(p => p.Students)
                 .HasForeignKey(d => d.StudyProgrammeId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("FK_Students_StudyProgrammes");
+
+            // 👇 ADAUGĂ ASTA PENTRU COORDONATOR:
+            entity.HasOne(d => d.Coordinator)
+                .WithMany() // Un Profesor are mulți studenți (chiar dacă nu avem listă în User)
+                .HasForeignKey(d => d.CoordinatorId)
+                .OnDelete(DeleteBehavior.SetNull) // Dacă ștergi profesorul, studentul rămâne fără coordonator
+                .HasConstraintName("FK_Students_Coordinator");
         });
 
         modelBuilder.Entity<Company>(entity => 

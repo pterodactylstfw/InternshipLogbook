@@ -7,6 +7,9 @@ namespace InternshipLogbook.API.Models
     {
         [Key]
         public int Id { get; set; }
+        
+        [Required]
+        public string FullName { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress]

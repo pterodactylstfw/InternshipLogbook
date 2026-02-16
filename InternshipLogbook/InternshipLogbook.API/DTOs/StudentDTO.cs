@@ -20,5 +20,6 @@
         public string? EvaluationCommunication { get; set; }
         public string? EvaluationLearning { get; set; }
         public int? SuggestedGrade { get; set; }
+        public string CoordinatorName { get; set; }
     }
 }

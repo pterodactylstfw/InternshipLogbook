@@ -58,6 +58,7 @@ namespace InternshipLogbook.API.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim("FullName", user.FullName),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role),
                 new Claim("SecurityStamp", user.SecurityStamp)
