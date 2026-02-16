@@ -54,6 +54,7 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<InternshipLogbookDbContext>();
+        context.Database.Migrate(); //pt test local, in productie se face manual
         DbInitializer.Initialize(context);
     }
     catch (Exception ex)
