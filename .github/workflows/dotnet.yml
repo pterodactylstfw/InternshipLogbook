@@ -20,8 +20,8 @@ jobs:
 
     - name: Restore dependencies
       run: dotnet restore
-      working-directory: ./InternshipLogbook.API 
+      working-directory: ./InternshipLogbook/InternshipLogbook.API 
 
     - name: Build
       run: dotnet build --no-restore
-      working-directory: ./InternshipLogbook.API
+      working-directory: ./InternshipLogbook/InternshipLogbook.API
