@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InternshipLogbook.API.Migrations
 {
     [DbContext(typeof(InternshipLogbookDbContext))]
-    [Migration("20260215191403_InitialSchema")]
+    [Migration("20260216140437_InitialSchema")]
     partial class InitialSchema
     {
         /// <inheritdoc />

@@ -8,11 +8,14 @@ namespace InternshipLogbook.API.Data
         {
             context.Database.EnsureCreated();
 
-
-            if (context.Students.Any())
+            if (context.Students.Any()) // daca avem studenti nu mai adaugam
             {
                 return;
             }
+            
+            /*
+             * date hardcodate pt test
+             */
             
             var faculty = new Faculty
             {
@@ -61,10 +64,10 @@ namespace InternshipLogbook.API.Data
             
             var evaluation = new InternshipEvaluation
             {
-                StudentId = student.Id, // Legătura critică
+                StudentId = student.Id,
                 EvaluationDate = DateTime.Now,
-    
-                // Competențe Specifice (1=Beginner, 2=Intermediate, 3=Advanced)
+                
+                // comp tehnice
                 TaskSequencing = 2,
                 Documentation = 3,
                 TheoreticalKnowledge = 2,
@@ -79,7 +82,7 @@ namespace InternshipLogbook.API.Data
                 Design = 2,
                 Testing = 3,
 
-                // Competențe Generale
+                // comp generale
                 CompanyKnowledge = 3,
                 CommunicationTeam = 3,
                 CommunicationClients = 2,

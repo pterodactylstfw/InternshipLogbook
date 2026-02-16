@@ -1,6 +1,6 @@
-﻿namespace InternshipLogbook.API.Models.DTOs
+﻿namespace InternshipLogbook.API.DTOs
 {
-    public class StudentDto
+    public class StudentDto // dto pt transfer api - client
     {
         public int Id { get; set; }
         public string FullName { get; set; } = string.Empty;

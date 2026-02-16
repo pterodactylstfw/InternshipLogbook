@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using InternshipLogbook.API.Models;
+using InternshipLogbook.API.DTOs;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using InternshipLogbook.API.Models;
-using InternshipLogbook.API.Models.DTOs;
 
 namespace InternshipLogbook.API.Controllers
 {
@@ -52,7 +52,7 @@ namespace InternshipLogbook.API.Controllers
                                 .FirstOrDefaultAsync();
 
                         if (studentDto == null)
-                        {
+                        { 
                                 return NotFound();
                         }
 

@@ -19,11 +19,10 @@ namespace InternshipLogbook.API.Services
                 {
                     var body = wordDoc.MainDocumentPart.Document.Body;
 
-                    // Elimină ProofError-uri care fragmentează textul
+                    // elimin din document erori formatare
                     body.Descendants<ProofError>().ToList().ForEach(p => p.Remove());
-
-                    // ═══ IMPORTANT: Normalizăm Run-urile ÎNAINTE de orice replace ═══
-                    NormalizeRuns(body);
+                    
+                    NormalizeRuns(body); // pt a verifica daca placeholders sunt in acelasi elem text
 
                     var facultyName = student.StudyProgramme?.Faculty?.Name ?? "";
                     var studyProgName = student.StudyProgramme?.Name ?? "";
@@ -47,10 +46,10 @@ namespace InternshipLogbook.API.Services
                     ReplaceText(body, "{{InternshipOfficer}}", "Secretariat");
                     ReplaceText(body, "{{DepartmentDirector}}", "Director Departament");
 
-                    // TABELELE DE ACTIVITĂȚI
+                    // tabele activitati
                     GenerateActivityTables(body, activities);
 
-                    // PAGINA DE FINAL
+                    // pagina final
                     ReplaceText(body, "{{Eval_Quality}}", student.EvaluationQuality ?? "");
                     ReplaceText(body, "{{Eval_Comm}}", student.EvaluationCommunication ?? "");
                     ReplaceText(body, "{{Eval_Learn}}", student.EvaluationLearning ?? "");
@@ -61,8 +60,7 @@ namespace InternshipLogbook.API.Services
 
                     var eval = student.InternshipEvaluation;
 
-// --- Competențe Specifice (S1 - S13) ---
-// Notă: Asigură-te că în Word ai scris S1B, S1I, S1A (fără acolade e cel mai sigur)
+                    // comp specifice
                     SetSkillMarker(body, eval?.TaskSequencing,      "{{S1_B}}", "{{S1_I}}", "{{S1_A}}");
                     SetSkillMarker(body, eval?.Documentation,       "{{S2_B}}", "{{S2_I}}", "{{S2_A}}");
                     SetSkillMarker(body, eval?.TheoreticalKnowledge,"{{S3_B}}", "{{S3_I}}", "{{S3_A}}");
@@ -77,7 +75,7 @@ namespace InternshipLogbook.API.Services
                     SetSkillMarker(body, eval?.Design,              "{{S12_B}}", "{{S12_I}}", "{{S12_A}}");
                     SetSkillMarker(body, eval?.Testing,             "{{S13_B}}", "{{S13_I}}", "{{S13_A}}");
 
-// --- Competențe Generale (G1 - G7) ---
+                    // comp generale
                     SetSkillMarker(body, eval?.CompanyKnowledge,    "{{G1_B}}", "{{G1_I}}", "{{G1_A}}");
                     SetSkillMarker(body, eval?.CommunicationTeam,   "{{G2_B}}", "{{G2_I}}", "{{G2_A}}");
                     SetSkillMarker(body, eval?.CommunicationClients,"{{G3_B}}", "{{G3_I}}", "{{G3_A}}");
@@ -93,35 +91,27 @@ namespace InternshipLogbook.API.Services
             }
         }
 
-        /// <summary>
-        /// Unește toate Run-urile consecutive dintr-un Paragraph care au aceeași formatare
-        /// sau nu au formatare, astfel încât placeholder-urile să fie într-un singur Text element.
-        /// </summary>
-        private void NormalizeRuns(OpenXmlElement root)
+
+        private void NormalizeRuns(OpenXmlElement root) // folosit pt a verifica ca placeholderii fac parte din acelasi elem text
         {
             foreach (var paragraph in root.Descendants<Paragraph>().ToList())
             {
                 var runs = paragraph.Elements<Run>().ToList();
                 if (runs.Count <= 1) continue;
-
-                // Construim textul complet al paragrafului din toate run-urile
-                string fullText = string.Join("", runs.Select(r => r.InnerText));
-
-                // Dacă nu conține placeholder, nu avem ce normaliza
-                if (!fullText.Contains("{{")) continue;
-
-                // Păstrăm formatarea primului run
+                
+                string fullText = string.Join("", runs.Select(r => r.InnerText)); // concat prin run
+                
+                if (!fullText.Contains("{{")) continue; // nu normalizam daca nu are {{
+                
                 var firstRun = runs[0];
                 var runProperties = firstRun.Elements<RunProperties>().FirstOrDefault()?.CloneNode(true);
-
-                // Ștergem toate run-urile vechi
+                
                 foreach (var run in runs)
                 {
                     run.Remove();
                 }
-
-                // Creăm un singur run nou cu tot textul
-                var newRun = new Run();
+                
+                var newRun = new Run(); // cream un nou run care sa contina tot textul concatenat
                 if (runProperties != null)
                 {
                     newRun.Append(runProperties);
@@ -133,10 +123,10 @@ namespace InternshipLogbook.API.Services
             }
         }
 
-        private void GenerateActivityTables(Body body, List<DailyActivity> activities)
+        private void GenerateActivityTables(Body body, List<DailyActivity> activities) // generare tabel activitati
         {
             var masterTable = body.Descendants<Table>()
-                .FirstOrDefault(t => t.InnerText.Contains("{{D_1}}"));
+                .FirstOrDefault(t => t.InnerText.Contains("{{D_1}}")); // identif tabel principal care contine header
 
             if (masterTable == null) return;
 
@@ -146,8 +136,7 @@ namespace InternshipLogbook.API.Services
             foreach (var chunk in chunks)
             {
                 Table newTable = (Table)masterTable.CloneNode(true);
-
-                // ═══ Normalizăm și tabelul clonat ═══
+                
                 NormalizeRuns(newTable);
 
                 for (int i = 0; i < 3; i++)
@@ -183,7 +172,7 @@ namespace InternshipLogbook.API.Services
             masterTable.Remove();
         }
 
-        private void ReplaceText(Body body, string placeholder, string value)
+        private void ReplaceText(Body body, string placeholder, string value) // inlocuire placeholder - val
         {
             foreach (var text in body.Descendants<Text>())
             {
@@ -202,24 +191,19 @@ namespace InternshipLogbook.API.Services
         }
         private void SetSkillMarker(Body body, int? level, string tokenBeginner, string tokenIntermediate, string tokenAdvanced)
         {
-            // 1. Dacă nu există notă (null), ștergem toți markerii de pe rândul respectiv
-            if (level == null)
+            if (level == null) // daca nu e notat in tabel, atunci sterg toate cele 3 optiuni
             {
                 ReplaceText(body, tokenBeginner, "");
                 ReplaceText(body, tokenIntermediate, "");
                 ReplaceText(body, tokenAdvanced, "");
                 return;
             }
-
-            // 2. Punem X doar unde se potrivește nivelul
-            // Level 1 = Beginner
-            ReplaceText(body, tokenBeginner, (level == 1) ? "X" : "");
-
-            // Level 2 = Intermediate
-            ReplaceText(body, tokenIntermediate, (level == 2) ? "X" : "");
-
-            // Level 3 = Advanced
-            ReplaceText(body, tokenAdvanced, (level == 3) ? "X" : "");
+            
+            ReplaceText(body, tokenBeginner, (level == 1) ? "X" : ""); // beginner
+            
+            ReplaceText(body, tokenIntermediate, (level == 2) ? "X" : ""); // intermediate
+            
+            ReplaceText(body, tokenAdvanced, (level == 3) ? "X" : ""); // advanced
         }
     }
     
