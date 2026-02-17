@@ -1,50 +1,58 @@
 services:
-  # ═══ DATABASE ═══
+  # SQL Server 22 db
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: logbook_db
     platform: linux/amd64
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "InternshipLog2026!"
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=ParolaTaPuternica123!
     ports:
       - "1433:1433"
     volumes:
-      - sqldata:/var/opt/mssql
-    healthcheck:
-      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "InternshipLog2026!" -C -Q "SELECT 1" || exit 1
-      interval: 10s
-      timeout: 5s
-      retries: 15
-      start_period: 45s
+      - sql_data:/var/opt/mssql
+    networks:
+      - app-network
 
-  # ═══ BACKEND API ═══
+  # .net8
   api:
     build:
       context: ./InternshipLogbook.API
       dockerfile: Dockerfile
-    ports:
-      - "5203:5203"
+    container_name: logbook_api
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     environment:
-      - ASPNETCORE_URLS=http://+:5203
-      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=InternshipLogbookDB;User Id=sa;Password=InternshipLog2026!;TrustServerCertificate=True;Encrypt=False;MultipleActiveResultSets=true
+      - ASPNETCORE_ENVIRONMENT=Development
+      # Suprascriem conexiunea la baza de date.
+      # Server=db : "db" este numele serviciului definit mai sus (Docker DNS resolution)
+      - ConnectionStrings__DefaultConnection=Server=db;Database=InternshipLogbookDB;User Id=sa;Password=ParolaTaPuternica123!;TrustServerCertificate=True;
+      # Setările JWT trebuie să fie identice cu cele din appsettings.json
       - Jwt__Key=7A912F3B4C5D6E8F9A0B1C2D3E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F
       - Jwt__Issuer=InternshipLogbookAPI
       - Jwt__Audience=InternshipLogbookFrontend
-    restart: unless-stopped
+    ports:
+      - "5203:8080"
+    networks:
+      - app-network
 
-  # ═══ FRONTEND ═══
-  frontend:
+  # Angular
+  ui:
     build:
       context: ./internship-logbook-ui
       dockerfile: Dockerfile
-    ports:
-      - "4200:80"
+    container_name: logbook_ui
     depends_on:
       - api
-    restart: unless-stopped
+    ports:
+      - "4200:80"
+    networks:
+      - app-network
 
+# persist data
 volumes:
-  sqldata:
+  sql_data:
+
+networks:
+  app-network:
+    driver: bridge
