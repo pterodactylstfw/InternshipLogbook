@@ -1,173 +1,221 @@
 # Internship Logbook
 
-A full-stack web application for managing university internship journals. Built for Transilvania University of Brașov (UNITBV), it enables students to digitally record daily internship activities and coordinators to oversee student progress — replacing the traditional paper-based logbook workflow.
+A full-stack web application for managing university internship journals.  
+Built for **Transilvania University of Brașov (UNITBV)**, it enables students to digitally record daily internship activities and coordinators to oversee student progress — replacing the traditional paper-based logbook workflow.
 
-## Overview
+![Angular](https://img.shields.io/badge/Angular-21-dd0031?style=flat&logo=angular)
+![.NET](https://img.shields.io/badge/.NET-8.0-512bd4?style=flat&logo=dotnet)
+![Docker](https://img.shields.io/badge/Docker-Enabled-2496ed?style=flat&logo=docker)
 
-The system implements a role-based architecture with two distinct user experiences:
+---
 
-- **Students** log in to record their daily internship activities (location, time intervals, tasks performed, skills practiced), track progress visually, and export a fully formatted Word document ready for submission.
-- **Coordinators** access a dashboard showing all assigned students, monitor completion status, review individual journals, and manage activity records.
+## 🐳 Quick Start (Docker) — Recommended
 
-Authentication is handled via JWT tokens with role-based route guards ensuring each user type only accesses their permitted views.
+The easiest way to run the application is using **Docker Compose**.  
+This ensures the Database, API, and Frontend work together instantly without installing dependencies locally.
 
-## Features
+### Prerequisites
 
-### Student Portal
-- Record daily activities with date picker, time range selectors, and rich text fields
-- Full CRUD operations — create, edit, and delete activity entries
-- Sortable and filterable activity table with global search
-- Skeleton loading states and error recovery with retry
-- Responsive layout — table view on desktop, card view on mobile
-- One-click Word (DOCX) export using a university-approved template
-- Toast notifications and confirmation dialogs for all actions
-- Dark mode support with persistent preference
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
 
-### Coordinator Dashboard
-- Overview panel showing total assigned students and completion stats
-- Student cards with email, company, and visual progress bars
-- Click-through to view any student's full journal in a modal dialog
-- Responsive grid layout adapting from multi-column to single-column on mobile
+---
 
-### Authentication
-- JWT-based login with role detection (Student / Coordinator)
-- Automatic routing based on user role after login
-- Protected routes via Angular route guards
-- Form validation with inline error messages
-
-## Tech Stack
-
-### Backend
-
-| Technology | Purpose |
-|---|---|
-| .NET 8 | ASP.NET Core Web API |
-| Entity Framework Core | ORM with Code-First migrations |
-| SQL Server (LocalDB) | Relational database |
-| JWT Bearer | Authentication & authorization |
-| OpenXML SDK | Word document generation from templates |
-
-### Frontend
-
-| Technology | Purpose |
-|---|---|
-| Angular 19 | Standalone components with new control flow (`@if`, `@for`) |
-| PrimeNG (Aura) | UI component library with built-in dark mode |
-| SCSS | Custom theming (UNITBV brand colors) |
-| RxJS | Reactive state management and HTTP handling |
-
-## Prerequisites
-
-- [Node.js](https://nodejs.org/) v18+
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download)
-- SQL Server LocalDB (included with Visual Studio) or SQL Server Express
-- Angular CLI (`npm install -g @angular/cli`)
-
-## Getting Started
-
-### 1. Backend
+### 1️⃣ Clone the repository
 
 ```bash
-cd InternshipLogbook.API
+git clone https://github.com/your-username/internship-logbook.git
+cd internship-logbook
 ```
 
-Configure `appsettings.json` with your connection string and JWT secret:
+---
 
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "Server=(localdb)\\mssqllocaldb;Database=InternshipLogbookDB;Trusted_Connection=True;MultipleActiveResultSets=true"
-  },
-  "Jwt": {
-    "Key": "YOUR_SECRET_KEY_MIN_64_CHARACTERS",
-    "Issuer": "https://localhost:5203",
-    "Audience": "https://localhost:5203"
-  }
-}
+### 2️⃣ Run the application
+
+```bash
+docker-compose up --build
 ```
 
-Run the API (database is created and seeded automatically on first run):
+Wait a few minutes for the images to download and build.  
+The database is automatically seeded with demo data on the first run.
+
+---
+
+### 3️⃣ Access the app
+
+- **Frontend (UI):** http://localhost:4200
+- **Backend (Swagger):** http://localhost:5203/swagger
+
+---
+
+### 4️⃣ Stop the application
+
+Press `Ctrl + C` in the terminal or run:
+
+```bash
+docker-compose down
+```
+
+To reset the database completely:
+
+```bash
+docker-compose down -v
+```
+
+---
+
+## 🛠 Manual Installation (For Development)
+
+If you prefer to run the project without Docker to debug code, follow these steps.
+
+### Prerequisites
+
+- Node.js v20+
+- .NET 8.0 SDK
+- SQL Server (LocalDB or Express)
+
+---
+
+## 🔹 1. Backend Setup
+
+Navigate to the API folder:
+
+```bash
+cd InternshipLogbook/InternshipLogbook.API
+```
+
+Update `appsettings.json` connection string if needed (default uses LocalDB).
+
+Run the API:
 
 ```bash
 dotnet run
 ```
 
-The API will be available at `https://localhost:5203` with Swagger UI at `/swagger`.
+The API will start at:
 
-### 2. Frontend
+```
+https://localhost:5203
+```
+
+---
+
+## 🔹 2. Frontend Setup
+
+Navigate to the UI folder:
 
 ```bash
-cd internship-logbook-ui
+cd InternshipLogbook/internship-logbook-ui
+```
+
+Install dependencies:
+
+```bash
 npm install
+```
+
+Start the server:
+
+```bash
 ng serve
 ```
 
-Open `http://localhost:4200` in your browser.
-
-## Demo Credentials
-
-| Role | Email | Password |
-|---|---|---|
-| Student | `student@test.com` | `student123` |
-| Coordinator | `admin@test.com` | `admin123` |
-
-## Project Structure
+Open in browser:
 
 ```
-InternshipLogbook/
-├── InternshipLogbook.API/
-│   ├── Controllers/
-│   │   ├── AuthController.cs          # Login & JWT generation
-│   │   ├── StudentsController.cs      # Student CRUD endpoints
-│   │   ├── DailyActivitiesController.cs  # Activity CRUD endpoints
-│   │   └── ExportController.cs        # Word document generation
-│   ├── Models/                        # EF Core entities (Student, DailyActivity, Company, etc.)
-│   ├── Services/
-│   │   └── WordExportService.cs       # OpenXML template processing
-│   ├── Templates/
-│   │   └── Template.docx             # University logbook template
-│   └── Data/                          # DbContext & migrations
-│
-└── internship-logbook-ui/
-    └── src/app/
-        ├── login-page/                # Authentication page
-        ├── student-profile/           # Student journal (activities CRUD)
-        ├── coordinator-dashboard/     # Coordinator overview & monitoring
-        ├── services/
-        │   ├── student.ts             # HTTP service for students & activities
-        │   ├── auth/auth.ts           # Authentication service with JWT handling
-        │   └── theme.ts               # Dark mode toggle with localStorage persistence
-        └── models/                    # TypeScript interfaces
+http://localhost:4200
 ```
 
-## API Endpoints
+---
 
-| Method | Endpoint | Description |
-|---|---|---|
-| `POST` | `/api/Auth/login` | Authenticate and receive JWT |
-| `GET` | `/api/Students/{id}` | Get student profile with relations |
-| `GET` | `/api/Students/coordinator/{id}` | Get students assigned to coordinator |
-| `GET` | `/api/DailyActivities/student/{id}` | List activities for a student |
-| `POST` | `/api/DailyActivities/student/{id}` | Create a new activity |
-| `PUT` | `/api/DailyActivities/{id}` | Update an existing activity |
-| `DELETE` | `/api/DailyActivities/{id}` | Delete an activity |
-| `GET` | `/api/Export/word/{id}` | Download generated DOCX logbook |
+## 🔑 Demo Credentials
 
-## Troubleshooting
+The database is automatically populated with these accounts:
 
-**Database connection fails**
+| Role        | Email              | Password    |
+|------------|-------------------|------------|
+| Student    | student@test.com  | student123 |
+| Coordinator| admin@test.com    | admin123   |
 
-Ensure SQL Server LocalDB is running. Verify the connection string in `appsettings.json` matches your local instance. You can check with:
+> Note: The SQL Server `sa` password in Docker is  
+> **InternshipLog2026!** (if you need direct DB access).
+
+---
+
+## 🏗 Tech Stack
+
+### 🔹 Backend
+
+| Technology              | Purpose                                     |
+|--------------------------|---------------------------------------------|
+| .NET 8                  | ASP.NET Core Web API                       |
+| Entity Framework Core   | ORM with Code-First migrations             |
+| SQL Server              | Relational database (2022 Docker image)    |
+| JWT Bearer              | Secure authentication & authorization      |
+| OpenXML SDK             | Word document generation from templates    |
+
+---
+
+### 🔹 Frontend
+
+| Technology        | Purpose                                        |
+|------------------|------------------------------------------------|
+| Angular 19       | Modern framework with standalone components    |
+| PrimeNG (Aura)   | UI component library with Dark Mode support    |
+| Nginx            | High-performance web server (Docker production)|
+
+---
+
+## 📡 API Endpoints
+
+| Method | Endpoint                            | Description                          |
+|--------|------------------------------------|--------------------------------------|
+| POST   | `/api/Auth/login`                  | Authenticate and receive JWT token  |
+| GET    | `/api/Students/{id}`               | Get full student profile            |
+| GET    | `/api/Students/coordinator/{id}`   | Get students assigned to coordinator|
+| GET    | `/api/DailyActivities/student/{id}`| List all activities for a student   |
+| POST   | `/api/DailyActivities/student/{id}`| Create a new activity entry         |
+| PUT    | `/api/DailyActivities/{id}`        | Update an existing activity         |
+| DELETE | `/api/DailyActivities/{id}`        | Delete an activity                  |
+| GET    | `/api/Export/word/{id}`            | Download generated DOCX logbook     |
+
+---
+
+## ❓ Troubleshooting
+
+### 1️⃣ "Connection Refused" when running Docker
+
+SQL Server takes longer to start than the API.  
+If the API fails immediately, wait 10 seconds — Docker will automatically restart the API container, and it should connect successfully on the second try.
+
+---
+
+### 2️⃣ "401 Unauthorized" at Login
+
+If you restarted Docker but kept old volumes, the database might be out of sync with your JWT token or empty.
+
+Reset everything:
+
 ```bash
-sqllocaldb info MSSQLLocalDB
+docker-compose down -v
+docker-compose up --build
 ```
 
-**CORS errors in browser**
-The Angular dev server expects the API on port `5203`. If your API runs on a different port, update the `baseURL` in `src/app/services/student.ts`.
+---
 
-**Word export returns 500**
-Ensure `Templates/Template.docx` exists in the API project root. The template must contain the expected placeholder tags (`{{StudentName}}`, `{{D_1}}`, etc.).
+### 3️⃣ Word Export Issues
 
-## License
+Ensure the file:
 
-This project was developed as part of the internship program at Transilvania University of Brașov.
+```
+Templates/Template.docx
+```
+
+is present in the API folder.
+
+Docker handles this automatically via the `Dockerfile COPY` instruction.
+
+---
+
+## 📄 License
+
+Developed for the TSG (Transilvania Star Group) at Transilvania University of Brașov.
