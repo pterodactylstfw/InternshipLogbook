@@ -45,6 +45,17 @@ namespace InternshipLogbook.API.Data
             context.Companies.Add(company);
             context.SaveChanges();
             
+            var userCoord = new User
+            {
+                FullName = "Prof. Coordonator Ionescu",
+                Email = "admin@test.com",
+                PasswordHash = HashPassword("admin123"), // Parola: admin123
+                Role = "Coordinator",
+                StudentId = null
+            };
+            context.Users.Add(userCoord);
+            context.SaveChanges();
+            
             var student = new Student
             {
                 FullName = "Alexandru Popa",
@@ -54,7 +65,7 @@ namespace InternshipLogbook.API.Data
                 InternshipPeriod = "01.07.2026 - 21.07.2026",
                 InternshipDirector = "Conf. Dr. Ing. Mihai Ionescu",
                 HostTutor = "Ing. Andrei Radu",
-                
+                CoordinatorId = userCoord.Id,
                 EvaluationQuality = "Studentul a demonstrat o capacitate excelentă de învățare și adaptare la tehnologiile utilizate în proiect.",
                 EvaluationCommunication = "Comunicare eficientă cu echipa, a participat activ la ședințele zilnice (Daily Stand-up).",
                 EvaluationLearning = "A asimilat rapid conceptele de .NET și Angular.",
@@ -62,6 +73,15 @@ namespace InternshipLogbook.API.Data
             };
             context.Students.Add(student);
             context.SaveChanges();
+            
+            var userStudent = new User
+            {
+                Email = "student@test.com",
+                PasswordHash = HashPassword("student123"), // Parola: student123
+                Role = "Student",
+                StudentId = student.Id // leg cu profilul
+            };
+            context.Users.Add(userStudent);
             
             var evaluation = new InternshipEvaluation
             {
@@ -125,24 +145,7 @@ namespace InternshipLogbook.API.Data
             context.DailyActivities.AddRange(activities);
             context.SaveChanges();
             
-            var userStudent = new User
-            {
-                Email = "student@test.com",
-                PasswordHash = HashPassword("student123"), // Parola: student123
-                Role = "Student",
-                StudentId = student.Id // Legătura cu profilul
-            };
-            context.Users.Add(userStudent);
             
-            var userCoord = new User
-            {
-                Email = "admin@test.com",
-                PasswordHash = HashPassword("admin123"), // Parola: admin123
-                Role = "Coordinator",
-                StudentId = null
-            };
-            context.Users.Add(userCoord);
-            context.SaveChanges();
         }
         
         private static string HashPassword(string password)

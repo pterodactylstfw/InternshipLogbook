@@ -1,0 +1,50 @@
+services:
+  # ═══ DATABASE ═══
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    platform: linux/amd64
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "InternshipLog2026!"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqldata:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "InternshipLog2026!" -C -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 45s
+
+  # ═══ BACKEND API ═══
+  api:
+    build:
+      context: ./InternshipLogbook.API
+      dockerfile: Dockerfile
+    ports:
+      - "5203:5203"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_URLS=http://+:5203
+      - ConnectionStrings__DefaultConnection=Server=db,1433;Database=InternshipLogbookDB;User Id=sa;Password=InternshipLog2026!;TrustServerCertificate=True;Encrypt=False;MultipleActiveResultSets=true
+      - Jwt__Key=7A912F3B4C5D6E8F9A0B1C2D3E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F
+      - Jwt__Issuer=InternshipLogbookAPI
+      - Jwt__Audience=InternshipLogbookFrontend
+    restart: unless-stopped
+
+  # ═══ FRONTEND ═══
+  frontend:
+    build:
+      context: ./internship-logbook-ui
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  sqldata:
