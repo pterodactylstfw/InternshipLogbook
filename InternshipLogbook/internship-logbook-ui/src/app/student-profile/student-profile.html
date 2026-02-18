@@ -123,28 +123,32 @@
     <form [formGroup]="activityForm">
 
       <div class="form-row-3">
-        <div class="field">
-          <label for="dayNumber">Ziua *</label>
-          <p-inputnumber id="dayNumber" formControlName="dayNumber" [min]="1" placeholder="ex: 1"
-                         [style]="{'width': '100%'}"
-                         [class]="isFieldInvalid('dayNumber') ? 'ng-invalid ng-dirty' : ''">
-          </p-inputnumber>
+        <div class="field col-12 md:col-2">
+          <label class="font-medium">Ziua</label>
+          <p-inputNumber
+            formControlName="dayNumber"
+            [showButtons]="true"
+            [min]="1"
+            [max]="20"
+            [class.ng-invalid]="isFieldInvalid('dayNumber')"
+            [class.ng-dirty]="isFieldInvalid('dayNumber')">
+          </p-inputNumber>
           @if (isFieldInvalid('dayNumber')) {
-            <small class="field-error">
-              <i class="pi pi-exclamation-circle"></i> {{ getFieldError('dayNumber') }}
-            </small>
+            <small class="p-error block">Ziua este obligatorie.</small>
           }
         </div>
-        <div class="field">
-          <label for="dateOfActivity">Data *</label>
-          <p-datepicker id="dateOfActivity" formControlName="dateOfActivity" dateFormat="dd.mm.yy"
-                        [showIcon]="true" placeholder="Selectează data" [style]="{'width': '100%'}"
-                        [class]="isFieldInvalid('dateOfActivity') ? 'ng-invalid ng-dirty' : ''">
-          </p-datepicker>
+        <div class="field col-12 md:col-4">
+          <label class="font-medium">Data</label>
+          <p-datePicker
+            formControlName="dateOfActivity"
+            dateFormat="dd.mm.yy"
+            [showIcon]="true"
+            appendTo="body"
+            [class.ng-invalid]="isFieldInvalid('dateOfActivity')"
+            [class.ng-dirty]="isFieldInvalid('dateOfActivity')">
+          </p-datePicker>
           @if (isFieldInvalid('dateOfActivity')) {
-            <small class="field-error">
-              <i class="pi pi-exclamation-circle"></i> {{ getFieldError('dateOfActivity') }}
-            </small>
+            <small class="p-error block">Data este obligatorie.</small>
           }
         </div>
         <div class="field">
@@ -168,27 +172,31 @@
         </div>
       </div>
 
-      <div class="field">
-        <label for="venue">Locul Desfășurării *</label>
-        <input pInputText id="venue" formControlName="venue" placeholder="ex: Departamentul IT"
-               [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('venue')}" />
+      <div class="field col-12">
+        <label class="font-medium">Locul desfășurării</label>
+        <input
+          pInputText
+          formControlName="venue"
+          class="w-full"
+          [class.ng-invalid]="isFieldInvalid('venue')"
+          [class.ng-dirty]="isFieldInvalid('venue')" />
         @if (isFieldInvalid('venue')) {
-          <small class="field-error">
-            <i class="pi pi-exclamation-circle"></i> {{ getFieldError('venue') }}
-          </small>
+          <small class="p-error block">Locul desfășurării este obligatoriu.</small>
         }
       </div>
 
-      <div class="field">
-        <label for="activities">Activități Realizate *</label>
-        <textarea pTextarea id="activities" formControlName="activities" rows="3"
-                  placeholder="Descrieți activitățile realizate..."
-                  [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('activities')}">
-      </textarea>
+      <div class="field col-12">
+        <label class="font-medium">Activități desfășurate</label>
+        <textarea
+          pTextarea
+          formControlName="activities"
+          rows="3"
+          class="w-full"
+          [class.ng-invalid]="isFieldInvalid('activities')"
+          [class.ng-dirty]="isFieldInvalid('activities')">
+          </textarea>
         @if (isFieldInvalid('activities')) {
-          <small class="field-error">
-            <i class="pi pi-exclamation-circle"></i> {{ getFieldError('activities') }}
-          </small>
+          <small class="p-error block">Descrierea activității este obligatorie.</small>
         }
       </div>
 

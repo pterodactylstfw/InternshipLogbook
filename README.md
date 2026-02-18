@@ -23,8 +23,8 @@ This ensures the Database, API, and Frontend work together instantly without ins
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/your-username/internship-logbook.git
-cd internship-logbook
+git clone https://github.com/pterodactylstfw/InternshipLogbook.git
+cd InternshipLogbook
 ```
 
 ---
@@ -157,11 +157,11 @@ The database is automatically populated with these accounts:
 
 ### 🔹 Frontend
 
-| Technology        | Purpose                                        |
-|------------------|------------------------------------------------|
-| Angular 19       | Modern framework with standalone components    |
-| PrimeNG (Aura)   | UI component library with Dark Mode support    |
-| Nginx            | High-performance web server (Docker production)|
+| Technology     | Purpose                                        |
+|----------------|------------------------------------------------|
+| Angular 21      | Modern framework with standalone components    |
+| PrimeNG (Aura) | UI component library with Dark Mode support    |
+| Nginx          | High-performance web server (Docker production)|
 
 ---
 

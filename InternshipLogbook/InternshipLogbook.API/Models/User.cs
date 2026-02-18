@@ -13,7 +13,7 @@ namespace InternshipLogbook.API.Models
 
         [Required]
         [EmailAddress]
-        public string Email { get; set; } = string.Empty; // Va fi folosit ca Username
+        public string Email { get; set; } = string.Empty;
 
         [Required]
         [JsonIgnore] // ignor ca nu trimit catre frontend niciodata

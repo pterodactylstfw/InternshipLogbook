@@ -1,3 +1,4 @@
+@use 'sass:color';
 // ═══ Culori UNITBV ═══
 $unitbv-blue: #1a3a5c;
 $unitbv-blue-light: #2c5f8a;
@@ -10,7 +11,7 @@ $unitbv-bg: #f0f4f8;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, $unitbv-blue 0%, $unitbv-blue-light 50%, darken($unitbv-blue, 5%) 100%);
+  background: linear-gradient(135deg, $unitbv-blue 0%, $unitbv-blue-light 50%, color.adjust($unitbv-blue, $lightness: -5%) 100%);
   position: relative;
   overflow: hidden;
   padding: 24px;

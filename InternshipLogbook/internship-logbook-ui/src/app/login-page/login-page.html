@@ -1,9 +1,7 @@
 <div class="login-wrapper">
-  <!-- DECORATIVE BACKGROUND -->
   <div class="login-bg-pattern"></div>
 
   <div class="login-card-container">
-    <!-- LOGO / BRAND -->
     <div class="login-brand">
       <div class="brand-icon">
         <i class="pi pi-book"></i>
@@ -13,7 +11,7 @@
     </div>
 
     <!-- CARD LOGIN -->
-    <p-card styleClass="login-card">
+    <p-card class="login-card">
       <div class="card-header-section">
         <h2>Autentificare</h2>
         <p>Introdu datele contului tău pentru a continua</p>
@@ -31,10 +29,12 @@
             formControlName="email"
             placeholder="exemplu@student.unitbv.ro"
             [ngClass]="{'ng-invalid ng-dirty': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}" />
-          <small *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="field-error">
-            <i class="pi pi-exclamation-circle"></i>
-            {{ loginForm.get('email')?.errors?.['required'] ? 'Email-ul este obligatoriu' : 'Adresă email invalidă' }}
-          </small>
+          @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+            <small class="field-error">
+              <i class="pi pi-exclamation-circle"></i>
+              {{ loginForm.get('email')?.errors?.['required'] ? 'Email-ul este obligatoriu' : 'Adresă email invalidă' }}
+            </small>
+          }
         </div>
 
         <div class="login-field">
@@ -47,21 +47,23 @@
             [feedback]="false"
             [toggleMask]="true"
             placeholder="Introdu parola"
-            styleClass="login-password"
+            class="login-password"
             inputStyleClass="login-password-input">
           </p-password>
-          <small *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="field-error">
-            <i class="pi pi-exclamation-circle"></i> Parola este obligatorie
-          </small>
+          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <small class="field-error">
+              <i class="pi pi-exclamation-circle"></i> Parola este obligatorie
+            </small>
+          }
         </div>
 
-        <!-- ERROR MESSAGE -->
-        <div *ngIf="errorMessage" class="login-error">
-          <i class="pi pi-times-circle"></i>
-          <span>{{ errorMessage }}</span>
-        </div>
+        @if (errorMessage) {
+          <div class="login-error">
+            <i class="pi pi-times-circle"></i>
+            <span>{{ errorMessage }}</span>
+          </div>
+        }
 
-        <!-- SUBMIT -->
         <p-button
           label="Intră în cont"
           type="submit"
@@ -72,7 +74,6 @@
 
       </form>
 
-      <!-- DEMO INFO -->
       <div class="demo-section">
         <div class="demo-divider">
           <span>Conturi demonstrative</span>

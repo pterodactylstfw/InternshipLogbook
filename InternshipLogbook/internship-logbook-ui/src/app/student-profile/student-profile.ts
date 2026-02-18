@@ -171,9 +171,9 @@ export class StudentProfile implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  isFieldInvalid(fieldName: string): boolean {
-    const field = this.activityForm.get(fieldName);
-    return !!(field && field.invalid && field.touched);
+  isFieldInvalid(field: string): boolean {
+    const control = this.activityForm.get(field);
+    return control ? control.invalid && (control.dirty || control.touched) : false;
   }
 
   private formatTime(date: Date): string {

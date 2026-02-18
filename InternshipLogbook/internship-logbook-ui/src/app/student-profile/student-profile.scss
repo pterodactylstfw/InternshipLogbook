@@ -192,7 +192,7 @@ $unitbv-bg: #f0f4f8;
   }
 }
 
-// ═══ TIME RANGE (ÎN AFARA media query!) ═══
+// ═══ TIME RANGE ═══
 .time-range {
   display: flex;
   align-items: center;
@@ -260,7 +260,7 @@ $unitbv-bg: #f0f4f8;
   }
 }
 
-// ═══ DAY BADGE — PILL SHAPE (funcționează pe desktop ȘI mobil) ═══
+// ═══ DAY BADGE — PILL SHAPE ═══
 .day-badge {
   display: inline-flex;
   align-items: center;
@@ -398,7 +398,7 @@ $unitbv-bg: #f0f4f8;
 .mb-2 { margin-bottom: 8px; }
 
 // ══════════════════════════════════════
-// ═══ RESPONSIVE (UN SINGUR MEDIA QUERY) ═══
+// ═══ RESPONSIVE ═══
 // ══════════════════════════════════════
 @media (max-width: 768px) {
   .profile-header {

@@ -1,7 +1,6 @@
 <div class="dashboard-container">
 
-  <!-- PROFIL COORDONATOR -->
-  <p-card styleClass="coordinator-profile-card">
+  <p-card class="coordinator-profile-card">
     <ng-template #header>
       <div class="profile-header-gradient">
         <div class="profile-avatar">
@@ -29,13 +28,11 @@
     </div>
   </p-card>
 
-  <!-- TITLU SECȚIUNE -->
   <h3 class="section-title"><i class="pi pi-list"></i> Studenți în Coordonare</h3>
 
-  <!-- LISTA STUDENȚI -->
   <div class="students-grid">
     @for (student of students; track student.id) {
-      <p-card styleClass="student-item-card">
+      <p-card class="student-item-card">
         <div class="student-card-header">
           <div class="student-basic-info">
             <span class="student-name">{{ student.name }}</span>
@@ -74,7 +71,6 @@
           </div>
         </div>
 
-        <!-- PROGRESS BAR -->
         <div class="progress-bar-container">
           <div class="progress-bar" [style.width.%]="student.progress"></div>
         </div>
@@ -83,7 +79,6 @@
   </div>
 </div>
 
-<!-- DIALOG JURNAL -->
 <p-dialog
   [(visible)]="displayJournal"
   [header]="'Jurnal de Practică - ' + selectedStudentName"
@@ -94,10 +89,9 @@
   [resizable]="false"
   [breakpoints]="{'768px': '95vw'}">
 
-  <!-- TABEL DESKTOP -->
   <div class="journal-desktop">
     <p-table [value]="selectedStudentActivities" [paginator]="true" [rows]="5"
-             styleClass="p-datatable-striped">
+             class="p-datatable-striped">
       <ng-template #header>
         <tr>
           <th style="width: 60px">Ziua</th>
@@ -116,7 +110,7 @@
           <td class="cell-wrap">{{ activity.activities }}</td>
         </tr>
       </ng-template>
-      <ng-template #emptymessage>
+      <ng-template>
         <tr>
           <td colspan="5" class="empty-journal">
             <i class="pi pi-inbox"></i>
@@ -127,7 +121,6 @@
     </p-table>
   </div>
 
-  <!-- CARDS MOBILE (în dialog) -->
   <div class="journal-mobile">
     @if (selectedStudentActivities.length === 0) {
       <div class="empty-journal">
